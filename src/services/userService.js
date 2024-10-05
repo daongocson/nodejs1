@@ -81,7 +81,7 @@ const loginService = async (email1, password) => {
 
 const getUserService = async () => {
     try {
-
+      
         let result = await User.find({}).select("-password");
         return result;
 
@@ -90,6 +90,19 @@ const getUserService = async () => {
         return null;
     }
 }
+const {connsql,sql} =require("../config/datasql");
+const getLsErrorService = async function(req,res){
+    try {
+        var datetime = new Date();      
+        var pool= await connsql;
+        let strSql = "select *  FROM [His_xml].[dbo].[Loi130] where Ngay_Ra='" + datetime.toISOString().slice(0,10) + "'";        
+        let result= await pool.query(strSql);  
+        return result.recordset;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 module.exports = {
-    createUserService, loginService, getUserService
+    createUserService, loginService, getUserService,getLsErrorService
 }

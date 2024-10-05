@@ -1,5 +1,5 @@
 const express = require('express');
-const { createUser, handleLogin, getUser,  getAccount } = require('../controllers/userController');
+const { createUser, handleLogin, getUser,  getAccount,getLsError } = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delay = require('../middleware/delay');
 const routerAPI = express.Router();
@@ -14,6 +14,6 @@ routerAPI.post("/register", createUser);
 routerAPI.post("/login", handleLogin);
 
 routerAPI.get("/user", getUser);
-
+routerAPI.get("/lseror", getLsError);
 routerAPI.get("/account", delay, getAccount);
 module.exports = routerAPI; //export default
