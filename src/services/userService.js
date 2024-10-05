@@ -96,7 +96,7 @@ const getLsErrorService = async function(req,res){
         var datetime = new Date();   
       //  await sql.connect(sqlConfig);   
         await sql.connect(sqlConfig);   ;
-        let strSql = "select *  FROM [His_xml].[dbo].[Loi130] where maloi<>'NGAY_TTOAN' Ngay_Ra='" + datetime.toISOString().slice(0,10) + "'";        
+        let strSql = "select *  FROM [His_xml].[dbo].[Loi130] where maloi<>'NGAY_TTOAN' and Ngay_Ra='" + datetime.toISOString().slice(0,10) + "'";        
         let result= await sql.query(strSql);  
         return result.recordset;
     } catch (error) {
