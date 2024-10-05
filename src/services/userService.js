@@ -90,13 +90,14 @@ const getUserService = async () => {
         return null;
     }
 }
-const {connsql,sql} =require("../config/datasql");
+const {sqlConfig,sql} =require("../config/datasql");
 const getLsErrorService = async function(req,res){
     try {
-        var datetime = new Date();      
-        var pool= await connsql;
+        var datetime = new Date();   
+      //  await sql.connect(sqlConfig);   
+        await sql.connect(sqlConfig);   ;
         let strSql = "select *  FROM [His_xml].[dbo].[Loi130] where Ngay_Ra='" + datetime.toISOString().slice(0,10) + "'";        
-        let result= await pool.query(strSql);  
+        let result= await sql.query(strSql);  
         return result.recordset;
     } catch (error) {
         console.log(error);
