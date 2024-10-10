@@ -1,0 +1,13 @@
+const { Client } = require('pg');
+require('dotenv').config();
+const plSqlConfig = {
+    user: 'postgres',
+    password: 'bvma@ehc.vn',
+    host: '113.160.170.53',
+    port: '2121',
+    database: 'bvminhan',
+    };
+const connsql = new sql.ConnectionPool(sqlConfig).connect().then(pool=>{
+    return pool;
+}) ;
+module.exports = {plSqlConfig};

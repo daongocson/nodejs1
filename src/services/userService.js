@@ -3,7 +3,7 @@ require("dotenv").config();
 const User = require("../models/user");
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
-
+const { Client } = require('pg');
 const saltRounds = 10;
 
 const createUserService = async (name, email, password) => {
@@ -26,6 +26,50 @@ const createUserService = async (name, email, password) => {
         })
         return result;
 
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+const dbConfig = {
+    user: 'postgres',
+    password: 'bvma@ehc.vn',
+    host: '113.160.170.53',
+    port: '2121',
+    database: 'bvminhan',
+    };
+const getYlbacsiService = async (bacsi) => {
+    try {      
+        var bsArray = bacsi.split("(")[1];  
+        bsArray= bsArray.split(")")[0];  ;     
+        console.log("service.. ",bsArray);
+        try {
+            var datetime = new Date();   
+            const client = new Client(dbConfig); 
+            await client.connect().then(() => {
+                console.log('Connected to PostgreSQL database');
+            });             
+          //  let strPlSql="select servicedataid , TO_CHAR(servicedatausedate,'HH24:MI') ngayyl,patientrecordid  from tb_servicedata ts where servicedatausedate>='" + datetime.toISOString().slice(0,10) + " 11:20' limit  50";  
+           let strPlSql="select * from getYlbacsi('"+bsArray+"','abc')";  
+            console.log(strPlSql);
+            let result= await client.query(strPlSql);  
+            console.log(result.rows);
+            client.end()
+            .then(() => {
+                console.log('Connection to PostgreSQL closed');
+            })            
+            return {
+                dataYL: result.rows,
+                dataTH: result.rows,
+                dataKQ: result.rows,
+            };
+            //return result.rows;
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+        
+       
     } catch (error) {
         console.log(error);
         return null;
@@ -104,6 +148,18 @@ const getLsErrorService = async function(req,res){
         return null;
     }
 }
+const getLsDoctorService = async function(req,res){
+    try {
+        var datetime = new Date();        
+        await sql.connect(sqlConfig);  
+        let strSql = "select distinct TenNV+'('+CCHN+')' as name FROM [His_xml].[dbo].[tb_NhanVien] where TenNV is not null and CCHN <>''";        
+        let result= await sql.query(strSql);  
+        return result.recordset;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 module.exports = {
-    createUserService, loginService, getUserService,getLsErrorService
+    createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService
 }
