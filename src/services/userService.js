@@ -50,18 +50,95 @@ const getYlbacsiService = async (bacsi) => {
                 console.log('Connected to PostgreSQL database');
             });             
           //  let strPlSql="select servicedataid , TO_CHAR(servicedatausedate,'HH24:MI') ngayyl,patientrecordid  from tb_servicedata ts where servicedatausedate>='" + datetime.toISOString().slice(0,10) + " 11:20' limit  50";  
-           let strPlSql="select * from getYlbacsi('"+bsArray+"','abc')";  
-            console.log(strPlSql);
-            let result= await client.query(strPlSql);  
-            console.log(result.rows);
+           let strPlSql="select * from hisweb_getylenh('"+bsArray+"','abc')";  
+           //console.log(strPlSql);
+           let result= await client.query(strPlSql);        
+           var arrayYL = [];
+           var arrayTH = [];
+           var arrayKQ = [];
+           var rows = result.rows;
+           rows.forEach(function(item) {  
+                if(item.manhom==1){                    
+                    if(item.nguoith==bsArray){
+                        let arr= {                        
+                            servicedataid:item.servicedataid,
+                            patientrecordid:item.patientrecordid,
+                            dichvu:item.dichvu,
+                            nguoiyl: item.nguoiyl,
+                            ngayyl: item.ngayth
+                        };                   
+                        arrayYL.push(arr);  
+                    }
+                }                         
+                if(item.nguoiyl==bsArray){
+                    if(item.manhom!=1&&item.manhom!=3){                      
+                        let arr= {                        
+                            servicedataid:item.servicedataid,
+                            patientrecordid:item.patientrecordid,
+                            dichvu:item.dichvu,
+                            nguoiyl: item.nguoiyl,
+                            ngayyl: item.ngayyl
+                        };
+                        arrayYL.push(arr);
+                    }
+                    
+                };
+                if(item.dichvu=='Thủy châm') return;
+                if(item.manhom==5){
+                    if(item.nguoith!=null){
+                        if(item.nguoith.includes(bsArray)){
+                            let arr= {                        
+                                servicedataid:item.servicedataid,
+                                patientrecordid:item.patientrecordid,
+                                dichvu:item.dichvu,
+                                nguoiyl: item.nguoith,
+                                ngayyl: item.ngayth
+                            };                   
+                            arrayTH.push(arr);
+                        }
+                    }                    
+                }                
+                if(item.nguoith==bsArray){
+                    if(item.manhom!=5){
+                        let arr= {                        
+                            servicedataid:item.servicedataid,
+                            patientrecordid:item.patientrecordid,
+                            dichvu:item.dichvu,
+                            nguoiyl: item.nguoith,
+                            ngayyl: item.ngayth
+                        };                   
+                        arrayTH.push(arr);
+                    }                    
+                };
+                if(item.nguoikq==bsArray){
+                    // không lấy kq với nhóm thuốc
+                    if(item.manhom!=7){
+                        let arr= {                        
+                            servicedataid:item.servicedataid,
+                            patientrecordid:item.patientrecordid,
+                            dichvu:item.dichvu,
+                            nguoiyl: item.nguoikq,
+                            ngayyl: item.ngaykq
+                        };          
+                        arrayKQ.push(arr);
+                    }
+                    
+                };                  
+            });
+                 
+          //console.log(array);
+            
             client.end()
             .then(() => {
                 console.log('Connection to PostgreSQL closed');
-            })            
+            })    
+            arrayYL.sort((date1, date2) => date1 - date2); 
+            arrayTH.sort((date1, date2) => date1 - date2);       
+            arrayKQ.sort((date1, date2) => date1 - date2);                   
             return {
-                dataYL: result.rows,
-                dataTH: result.rows,
-                dataKQ: result.rows,
+                dataYL: arrayYL,
+                dataTH: arrayTH,
+                dataKQ: arrayKQ,
             };
             //return result.rows;
         } catch (error) {
