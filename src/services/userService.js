@@ -39,11 +39,10 @@ const dbConfig = {
     database: 'bvminhan',
     };
 const getYlbacsiService = async (bacsi) => {
-    try {      
-        var bsArray = bacsi.split("(")[1];  
-        bsArray= bsArray.split(")")[0];  ;     
-        console.log("service.. ",bsArray);
-        try {
+        try {          
+            var bsArray = bacsi.split("(")[1];  
+            bsArray= bsArray.split(")")[0];  ;     
+            console.log("service.. ",bsArray);
             var datetime = new Date();   
             const client = new Client(dbConfig); 
             await client.connect().then(() => {
@@ -145,14 +144,171 @@ const getYlbacsiService = async (bacsi) => {
             console.log(error);
             return null;
         }
-        
-       
-    } catch (error) {
+}
+const getLsPkService = async () => {
+    try {  
+        var datetime = new Date();   
+        const client = new Client(dbConfig); 
+        await client.connect().then(() => {
+            console.log('Connected to PostgreSQL database');
+        });   
+        let strPlSql="select roomid ,roomname  from tb_room where dm_roomtypeid=2 and roomdisable =0 and roomid not in ('541','469','628','548','650','666')";  
+        let result= await client.query(strPlSql);  
+        return result.rows;   
+    }
+    catch{
         console.log(error);
         return null;
     }
 }
-
+const getLsCskhService = async () => {
+    console.log(">>>>cskh");
+    try {  
+        await sql.connect(sqlConfig);   ;
+        let strSql = "select top 10 idcskh,patientrecordid,ghichu, CONVERT(VARCHAR(10), ngayravien, 120) as ngayra, ngayravien FROM[His_xml].[dbo].[tb_Cskh] where trangthai=4 order by ngayravien Desc";        
+        let result= await sql.query(strSql);  
+        return result.recordset;
+    }
+    catch{
+        console.log(error);
+        return null;
+    }
+}
+const getLsChamcongService = async () => {
+    try {  
+        await sql.connect(sqlConfig);   ;
+        let strSql = "SELECT TOP 200 ROW_NUMBER() OVER (ORDER BY TimeStr) AS RowID, info.[UserEnrollNumber],info.[UserEnrollName],info.[UserFullName],CONVERT(VARCHAR(19), TimeStr, 20) as ngaycham,[TimeDate],info.UserIDD "
+        +" FROM [chamcong].[dbo].[CheckInOut] inout,[chamcong].[dbo].[UserInfo] info "
+        +" where inout.[UserEnrollNumber]=info.UserEnrollNumber and info.[UserEnrollNumber] not in  (6,98)"
+        +" and timeStr> CAST( GETDATE() AS Date ) order by TimeStr DESC" ;
+        //DATEADD(mm, DATEDIFF(m,0,GETDATE()),0) order by TimeStr DESC" ;		;
+        let result= await sql.query(strSql);  
+        return result.recordset;
+    }
+    catch{
+        console.log(error);
+        return null;
+    }
+}
+const getLsKhambenhService = async (khambenh) => {
+    try {  
+        var datetime = new Date();   
+        const client = new Client(dbConfig); 
+        await client.connect().then(() => {
+            console.log('Connected to PostgreSQL database');
+        });   
+        let strPlSql="select roomid from tb_room where dm_roomtypeid=2 and roomname ='"+khambenh+"'";  
+        let result= await client.query(strPlSql);          
+        console.log(strPlSql);
+        let idPk=0;
+        result.rows.forEach(function(item) { 
+            idPk= item.roomid;
+        });
+        let sqlPhongkham = "select tm.roomid, tm.dm_medicalrecordstatusid, tp.patientcode,tp.patientrecordid , tp.patientname,tp.dm_patientobjectid,tp.dm_patientrecordtypeid "
+        +" from tb_medicalrecord tm,tb_patientrecord tp  where "
+        +"tp.patientrecordid=tm.patientrecordid and tm.medicalrecorddate >CURRENT_DATE and tm.medicalrecorddate <CURRENT_DATE+ interval '1' day " 
+        +"and tm.roomid in(select roomid from tb_room tr where dm_roomtypeid =2 and roomdisable =0) and tm.roomid=" + idPk;
+        console.log(sqlPhongkham);
+        let resultPk= await client.query(sqlPhongkham);    
+        return resultPk.rows;   
+    }
+    catch{
+        console.log(error);
+        return null;
+    }
+}
+const getLsChamcongIdService = async (manv) => {
+    try {       
+        if(manv== null ||manv==""){            
+            return [];
+        } 
+        else{
+            console.log(">>>>inhere",manv);
+            await sql.connect(sqlConfig);   ;
+            let strSql = "SELECT TOP 300 ROW_NUMBER() OVER (ORDER BY TimeStr) AS RowID, info.[UserEnrollNumber],info.[UserEnrollName],info.[UserFullName],CONVERT(VARCHAR(19), TimeStr, 20) as ngaycham,[TimeDate],info.UserIDD "
+            +" FROM [chamcong].[dbo].[CheckInOut] inout,[chamcong].[dbo].[UserInfo] info "
+            +" where inout.[UserEnrollNumber]=info.UserEnrollNumber and info.[UserEnrollNumber] not in  (6,98) and  inout.[UserEnrollNumber]="+manv
+            +" and timeStr> DATEADD(mm, DATEDIFF(m,0,GETDATE()),0) order by TimeStr DESC" ;   
+            let result= await sql.query(strSql);  
+            return result.recordset;            
+        }
+      
+    }
+    catch{
+        console.log(error);
+        return null;
+    }
+}
+const getPatientService = async (mavp) => {
+       try {
+            var datetime = new Date();   
+            const client = new Client(dbConfig); 
+            await client.connect().then(() => {
+                console.log('Connected to PostgreSQL database');
+            });             
+        
+           let strPlSql="select servicedataid as id,servicename as name,TO_CHAR(servicedatausedate,'dd/MM HH24:MI') as value,dm_servicegroupid as manhom from tb_servicedata ts where servicecodebhyt<> '' and soluong> 0 and dm_servicegroupid > 0 and dm_serviceobjectid in (3, 4) and dm_servicegroupid in(1, 3, 4, 5,7) and patientrecordid ='"+mavp+"'";  
+           let strPatientSql="select patientname ,patientcode,dm_patientobjectid,TO_CHAR(receptiondate,'dd/MM HH24:MI') as ngayvao,TO_CHAR(medicalrecorddate_out,'dd/MM HH24:MI') as ngayra "
+           +",chandoan_out_main_icd10 ,chandoan_out_main,insurancecode,thonxom ||'-'||tdx.dm_xaname as diachi"+
+           " from tb_patientrecord tp,tb_dm_xa tdx where tdx.dm_xacode =tp.dm_xacode and patientrecordid ='"+mavp+"'";  
+           //console.log(strPlSql);
+           let result= await client.query(strPlSql);        
+           let resultInfo= await client.query(strPatientSql);   
+           var arrayInfo = [];
+           var arrayKB = [];
+           var arrayTH = [];
+           var arrayDV = [];
+           var rows = result.rows;
+           var rowsInfo = resultInfo.rows;
+           rows.forEach(function(item) {  
+                if(item.manhom==1){                                                
+                    arrayKB.push(item);  
+                }                         
+                else if(item.manhom==7){
+                    arrayTH.push(item);  
+                }
+                else{
+                    arrayDV.push(item);  
+                }
+            });  
+            rowsInfo.forEach(function(item) {                 
+                arrayInfo.push({id:"1",name:"Tên khách hàng",value:item.patientname});
+                arrayInfo.push({id:"2",name:"Mã khách hàng",value:item.patientcode});
+                if(item.dm_patientobjectid==2)
+                    arrayInfo.push({id:"3",name:"Đối tượng",value:"Viện phí"});
+                else
+                    arrayInfo.push({id:"3",name:"Đối tượng",value:"Bảo hiểm"});               
+                if(item.chandoan_out_main_icd10)
+                    arrayInfo.push({id:"4",name:"ICD",value:item.chandoan_out_main_icd10});
+                if(item.chandoan_out_main)
+                    arrayInfo.push({id:"5",name:"Mã bệnh",value:item.chandoan_out_main});                
+                if(item.insurancecode)
+                    arrayInfo.push({id:"8",name:"Mã Thẻ",value:item.insurancecode});    
+                arrayInfo.push({id:"9",name:"Địa chỉ",value:item.diachi});               
+                arrayInfo.push({id:"6",name:"Ngày vào",value:item.ngayvao});
+                arrayInfo.push({id:"7",name:"Ngày ra viện",value:item.ngayra});  
+                              
+               
+            });              
+            client.end()
+            .then(() => {
+                console.log('Connection to PostgreSQL closed');
+            })    
+            arrayKB.sort((date1, date2) => date1 - date2); 
+            arrayTH.sort((date1, date2) => date1 - date2);       
+            arrayDV.sort((date1, date2) => date1 - date2);                   
+            return {
+                dataKH: arrayInfo,
+                dataKB: arrayKB,
+                dataTH: arrayTH,
+                dataDV: arrayDV,
+            };
+            //return result.rows;
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+}
 const loginService = async (email1, password) => {
     try {
         //fetch user by email
@@ -238,5 +394,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService
+    createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService
 }
