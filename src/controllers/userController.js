@@ -10,8 +10,9 @@ const createUser = async (req, res) => {
 }
 
 const handleLogin = async (req, res) => {
-    const { email, password } = req.body;    
-    logAction("handleLogin",email+"G-"+(new Date()).getMilliseconds());
+    const { email, password,ipClient } = req.body;    
+  //  console.log("serverIP>>",ipClient);
+    logAction("handleLogin",email+"login at IP-"+ipClient+":"+(new Date()).getMilliseconds());
     const data = await loginService(email, password);
     return res.status(200).json(data)
 }
@@ -47,7 +48,7 @@ const getLskhambenh = async (req, res) => {
 }
 const getChamcongId = async (req, res) => {      
     const {manv} = req.body;   
-    //logAction("getChamcongId",manv+"-"+(new Date()).getMilliseconds()); 
+    logAction("getChamcongId",manv+"-"+(new Date()).getMilliseconds()); 
     const data = await getLsChamcongIdService(manv);
     return res.status(200).json(data)
 }

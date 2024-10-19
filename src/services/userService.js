@@ -166,7 +166,8 @@ const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc) => {
     }
 }
 const saveAtion = async (id_act,content) => {
-    try {        
+    try {       
+        await sql.connect(sqlConfig);  
         let sqlLog = "INSERT INTO [weblog] (idaction, content,ngaylog)VALUES ('"+id_act+"',N'"+content+"',GETDATE());"       
         await sql.query(sqlLog);            
     } catch (error) {
