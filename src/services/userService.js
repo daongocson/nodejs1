@@ -46,7 +46,7 @@ const getYlbacsiService = async (bacsi) => {
             var datetime = new Date();   
             const client = new Client(dbConfig); 
             await client.connect().then(() => {
-                console.log('Connected to PostgreSQL database');
+               // console.log('Connected to PostgreSQL database');
             });             
           //  let strPlSql="select servicedataid , TO_CHAR(servicedatausedate,'HH24:MI') ngayyl,patientrecordid  from tb_servicedata ts where servicedatausedate>='" + datetime.toISOString().slice(0,10) + " 11:20' limit  50";  
            let strPlSql="select * from hisweb_getylenh('"+bsArray+"','abc')";  
@@ -129,7 +129,7 @@ const getYlbacsiService = async (bacsi) => {
             
             client.end()
             .then(() => {
-                console.log('Connection to PostgreSQL closed');
+                //console.log('Connection to PostgreSQL closed');
             })    
             arrayYL.sort((date1, date2) => date1 - date2); 
             arrayTH.sort((date1, date2) => date1 - date2);       
@@ -145,12 +145,42 @@ const getYlbacsiService = async (bacsi) => {
             return null;
         }
 }
+const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc) => {
+    try {
+        let mavp=tenbn.split("-")[0];
+        let sqlServer = "INSERT INTO yeucau (tenbn, yeucau, dichvu,nguoiyc,ngayyc)VALUES (N'"+tenbn+"',N'"+yeucau+"',N'"+dichvu+"',N'"+nguoiyc+"',GETDATE());"
+        sqlServer +=";select *,CONVERT(VARCHAR(10), ngayyc, 120) as nyc from [His_xml].[dbo].[yeucau] where tenbn like'"+mavp+"-%'";        
+        try {  
+            await sql.connect(sqlConfig);   
+            let result= await sql.query(sqlServer);            
+            return result.recordset;
+        }
+        catch{
+            console.log(error);
+            return null;
+        }
+
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+const saveAtion = async (id_act,content) => {
+    try {        
+        let sqlLog = "INSERT INTO [weblog] (idaction, content,ngaylog)VALUES ('"+id_act+"',N'"+content+"',GETDATE());"
+        console.log(sqlLog);
+        await sql.query(sqlLog);            
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 const getLsPkService = async () => {
     try {  
         var datetime = new Date();   
         const client = new Client(dbConfig); 
         await client.connect().then(() => {
-            console.log('Connected to PostgreSQL database');
+            //console.log('Connected to PostgreSQL database');
         });   
         let strPlSql="select roomid ,roomname  from tb_room where dm_roomtypeid=2 and roomdisable =0 and roomid not in ('541','469','628','548','650','666')";  
         let result= await client.query(strPlSql);  
@@ -161,12 +191,11 @@ const getLsPkService = async () => {
         return null;
     }
 }
-const getLsCskhService = async () => {
-    console.log(">>>>cskh");
+const getLsCskhService = async () => {  
     try {  
         await sql.connect(sqlConfig);   ;
         let strSql = "select top 10 idcskh,patientrecordid,ghichu, CONVERT(VARCHAR(10), ngayravien, 120) as ngayra, ngayravien FROM[His_xml].[dbo].[tb_Cskh] where trangthai=4 order by ngayravien Desc";        
-        let result= await sql.query(strSql);  
+        let result= await sql.query(strSql);         
         return result.recordset;
     }
     catch{
@@ -195,11 +224,10 @@ const getLsKhambenhService = async (khambenh) => {
         var datetime = new Date();   
         const client = new Client(dbConfig); 
         await client.connect().then(() => {
-            console.log('Connected to PostgreSQL database');
+         //   console.log('Connected to PostgreSQL database');
         });   
         let strPlSql="select roomid from tb_room where dm_roomtypeid=2 and roomname ='"+khambenh+"'";  
         let result= await client.query(strPlSql);          
-        console.log(strPlSql);
         let idPk=0;
         result.rows.forEach(function(item) { 
             idPk= item.roomid;
@@ -208,7 +236,6 @@ const getLsKhambenhService = async (khambenh) => {
         +" from tb_medicalrecord tm,tb_patientrecord tp  where "
         +"tp.patientrecordid=tm.patientrecordid and tm.medicalrecorddate >CURRENT_DATE and tm.medicalrecorddate <CURRENT_DATE+ interval '1' day " 
         +"and tm.roomid in(select roomid from tb_room tr where dm_roomtypeid =2 and roomdisable =0) and tm.roomid=" + idPk;
-        console.log(sqlPhongkham);
         let resultPk= await client.query(sqlPhongkham);    
         return resultPk.rows;   
     }
@@ -244,16 +271,20 @@ const getPatientService = async (mavp) => {
             var datetime = new Date();   
             const client = new Client(dbConfig); 
             await client.connect().then(() => {
-                console.log('Connected to PostgreSQL database');
+              //  console.log('Connected to PostgreSQL database');
             });             
         
            let strPlSql="select servicedataid as id,servicename as name,TO_CHAR(servicedatausedate,'dd/MM HH24:MI') as value,dm_servicegroupid as manhom from tb_servicedata ts where servicecodebhyt<> '' and soluong> 0 and dm_servicegroupid > 0 and dm_serviceobjectid in (3, 4) and dm_servicegroupid in(1, 3, 4, 5,7) and patientrecordid ='"+mavp+"'";  
            let strPatientSql="select patientname ,patientcode,dm_patientobjectid,TO_CHAR(receptiondate,'dd/MM HH24:MI') as ngayvao,TO_CHAR(medicalrecorddate_out,'dd/MM HH24:MI') as ngayra "
            +",chandoan_out_main_icd10 ,chandoan_out_main,insurancecode,thonxom ||'-'||tdx.dm_xaname as diachi"+
-           " from tb_patientrecord tp,tb_dm_xa tdx where tdx.dm_xacode =tp.dm_xacode and patientrecordid ='"+mavp+"'";  
+           " from tb_patientrecord tp,tb_dm_xa tdx where tdx.dm_xacode =tp.dm_xacode and patientrecordid ='"+mavp+"'";             
            //console.log(strPlSql);
            let result= await client.query(strPlSql);        
-           let resultInfo= await client.query(strPatientSql);   
+           let resultInfo= await client.query(strPatientSql);
+           //conect sql   
+           await sql.connect(sqlConfig);   
+           let strYeucauSql="select *,CONVERT(VARCHAR(10), ngayyc, 120) as nyc  from [His_xml].[dbo].[yeucau] where tenbn like '"+mavp+"-%'";   
+           let resultYc= await sql.query(strYeucauSql);             
            var arrayInfo = [];
            var arrayKB = [];
            var arrayTH = [];
@@ -284,7 +315,7 @@ const getPatientService = async (mavp) => {
                     arrayInfo.push({id:"5",name:"Mã bệnh",value:item.chandoan_out_main});                
                 if(item.insurancecode)
                     arrayInfo.push({id:"8",name:"Mã Thẻ",value:item.insurancecode});    
-                arrayInfo.push({id:"9",name:"Địa chỉ",value:item.diachi});               
+              //  arrayInfo.push({id:"9",name:"Địa chỉ",value:item.diachi});               
                 arrayInfo.push({id:"6",name:"Ngày vào",value:item.ngayvao});
                 arrayInfo.push({id:"7",name:"Ngày ra viện",value:item.ngayra});  
                               
@@ -292,7 +323,7 @@ const getPatientService = async (mavp) => {
             });              
             client.end()
             .then(() => {
-                console.log('Connection to PostgreSQL closed');
+              //  console.log('Connection to PostgreSQL closed');
             })    
             arrayKB.sort((date1, date2) => date1 - date2); 
             arrayTH.sort((date1, date2) => date1 - date2);       
@@ -302,6 +333,7 @@ const getPatientService = async (mavp) => {
                 dataKB: arrayKB,
                 dataTH: arrayTH,
                 dataDV: arrayDV,
+                dataYC:resultYc.recordset
             };
             //return result.rows;
         } catch (error) {
@@ -381,6 +413,19 @@ const getLsErrorService = async function(req,res){
         return null;
     }
 }
+const getLsycsuaService = async function(){
+    try {
+        var datetime = new Date();  
+        await sql.connect(sqlConfig);   ;
+        //let strSql = "select *  FROM [His_xml].[dbo].[yeucau] where maloi<>'NGAY_TTOAN' and ngayyc='" + datetime.toISOString().slice(0,10) + "'";        
+        let strSql = "select top 50 *,CONVERT(VARCHAR(10), ngayyc, 120) as nyc   FROM [His_xml].[dbo].[yeucau]";        
+        let result= await sql.query(strSql);  
+        return result.recordset;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 const getLsDoctorService = async function(req,res){
     try {
         var datetime = new Date();        
@@ -394,5 +439,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService
+    saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }
