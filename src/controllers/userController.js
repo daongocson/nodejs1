@@ -1,6 +1,9 @@
-const { createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion } = require("../services/userService");
-const logAction = async (id_act,content) => {   
-    const logAct = await saveAtion(id_act,content);
+const { createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService } = require("../services/userService");
+const logAction = async (id_act,content) => {  
+ 
+    var os = require("os");
+    var hostname = os.hostname();      
+    const logAct = await saveAtion(id_act,hostname+","+content);
 }
 const createUser = async (req, res) => {
     const { name, email, password } = req.body;    
@@ -11,9 +14,8 @@ const createUser = async (req, res) => {
 
 const handleLogin = async (req, res) => {
     const { email, password,ipClient } = req.body;    
-  //  console.log("serverIP>>",ipClient);
-    logAction("handleLogin",email+"login at IP-"+ipClient+":"+(new Date()).getMilliseconds());
-    const data = await loginService(email, password);
+  //  logAction("handleLogin",email+"login at IP-"+ipClient+":"+(new Date()).getMilliseconds());
+    const data = await loginService(email, password,ipClient);
     return res.status(200).json(data)
 }
 
@@ -35,9 +37,15 @@ const getPatient = async (req, res) => {
     return res.status(200).json(data)
 }
 const guiYeucau = async (req, res) => {   
-    const {tenbn,yeucau,dichvu,nguoiyc} = req.body;  
-    logAction("guiYeucau",tenbn+"-"+(new Date()).getMilliseconds()); 
-    const data = await postYeucauService(tenbn,yeucau,dichvu,nguoiyc);
+    const {tenbn,yeucau,dichvu,nguoiyc,ngayrv} = req.body;  
+    logAction("guiYeucau",tenbn+"-"+(new Date()).getMilliseconds());     
+    const data = await postYeucauService(tenbn,yeucau,dichvu,nguoiyc,ngayrv);
+    return res.status(200).json(data)
+}
+const guiDuyetyeucau = async (req, res) => {   
+    const {idyc,maquyen,tenbn} = req.body;     
+    console.log(">>>>>>>>>guiduyet",idyc,maquyen,tenbn); 
+    const data = await guiDuyetyeucauService(idyc,maquyen);
     return res.status(200).json(data)
 }
 const getLskhambenh = async (req, res) => {   
@@ -53,7 +61,7 @@ const getChamcongId = async (req, res) => {
     return res.status(200).json(data)
 }
 const getLsError = async (req, res) => {
-    logAction("getLsError","G-"+(new Date()).getMilliseconds()); 
+    logAction("getLsError","G-"+(new Date()).getMilliseconds());  
     const data = await getLsErrorService(req,res);
     return res.status(200).json(data);
 }
@@ -88,6 +96,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }

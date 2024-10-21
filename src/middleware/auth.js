@@ -1,7 +1,11 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-
+const { saveAtion } = require("../services/userService");
+const Luulog= async (mail, name,ipclient)=>{
+    saveAtion(mail,ipclient);
+}
 const auth = (req, res, next) => {
+
     const white_lists = ["/", "/register", "/login"];
     if (white_lists.find(item => '/v1/api' + item === req.originalUrl)) {
         next();
@@ -11,8 +15,13 @@ const auth = (req, res, next) => {
 
             //verify token
             try {
-                const decoded = jwt.verify(token, process.env.JWT_SECRET)
-              //  console.log(">>> check token: ", decoded)
+                const decoded = jwt.verify(token, process.env.JWT_SECRET)               
+                try{
+                    if(decoded.ipclient)
+                        if(!decoded.ipclient.includes("localhost"))
+                            Luulog(decoded.email,decoded.name,req.originalUrl+","+decoded.ipclient);
+                }catch(e){};
+                
                 next();
             } catch (error) {
                 return res.status(401).json({

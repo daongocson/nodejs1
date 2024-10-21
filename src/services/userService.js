@@ -145,14 +145,14 @@ const getYlbacsiService = async (bacsi) => {
             return null;
         }
 }
-const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc) => {
+const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc,ngayrv) => {
     try {
         let mavp=tenbn.split("-")[0];
-        let sqlServer = "INSERT INTO yeucau (tenbn, yeucau, dichvu,nguoiyc,ngayyc)VALUES (N'"+tenbn+"',N'"+yeucau+"',N'"+dichvu+"',N'"+nguoiyc+"',GETDATE());"
+        let sqlServer = "INSERT INTO yeucau (ngayrv,trangthaihs,phongth,tenbn, yeucau, dichvu,nguoiyc,ngayyc)VALUES ('"+ngayrv+"',0,'KHTH',N'"+tenbn+"',N'"+yeucau+"',N'"+dichvu+"',N'"+nguoiyc+"',GETDATE());"
         sqlServer +=";select *,CONVERT(VARCHAR(10), ngayyc, 120) as nyc from [His_xml].[dbo].[yeucau] where tenbn like'"+mavp+"-%'";        
         try {  
             await sql.connect(sqlConfig);   
-            let result= await sql.query(sqlServer);            
+            let result= await sql.query(sqlServer); 
             return result.recordset;
         }
         catch{
@@ -163,6 +163,41 @@ const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc) => {
     } catch (error) {
         console.log(error);
         return null;
+    }
+}
+const guiDuyetyeucauService = async (idyc,maquyen) => {
+    try {      
+        let sqlServer = "select * from [His_xml].[dbo].[yeucau] where idyc ='"+idyc+"'";        
+        await sql.connect(sqlConfig);           
+        let result= await sql.query(sqlServer);    
+        var rows = result.recordset;
+        if(maquyen.toLowerCase()=="sam03"){
+            if(rows[0].phongth=="KHTH"){
+                let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='IT' where idyc ='"+idyc+"'";      
+                await sql.query(sqlServerkhth);      
+                return {message:"sucess",duyet:idyc};
+            }
+        }else if(maquyen.toLowerCase()=="it02"){
+            if(rows[0].phongth=="IT"){
+                let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='DONE',trangthaihs=1 where idyc ='"+idyc+"'";      
+                await sql.query(sqlServerkhth);      
+                return {message:"sucess",duyet:idyc};            }
+                
+        }else if(maquyen.toLowerCase()=="delete40576"){
+                let sqlServerkhth = "delete [His_xml].[dbo].[yeucau] where idyc ='"+idyc+"'";      
+                await sql.query(sqlServerkhth);      
+                return {message:"sucess",duyet:idyc};   
+        }else if(rows[0].phongth=="DONE"){
+            return {message:"sucess",duyet:idyc};   
+        }
+        else{
+            return {message:"fail",duyet:idyc};
+        }
+        
+        
+    } catch (error) {
+        console.log(error);
+        return {message:"thất bại",duyet:idyc};
     }
 }
 const saveAtion = async (id_act,content) => {
@@ -249,8 +284,7 @@ const getLsChamcongIdService = async (manv) => {
         if(manv== null ||manv==""){            
             return [];
         } 
-        else{
-            console.log(">>>>inhere",manv);
+        else{          
             await sql.connect(sqlConfig);   ;
             let strSql = "SELECT TOP 300 ROW_NUMBER() OVER (ORDER BY TimeStr) AS RowID, info.[UserEnrollNumber],info.[UserEnrollName],info.[UserFullName],CONVERT(VARCHAR(19), TimeStr, 20) as ngaycham,[TimeDate],info.UserIDD "
             +" FROM [chamcong].[dbo].[CheckInOut] inout,[chamcong].[dbo].[UserInfo] info "
@@ -275,7 +309,7 @@ const getPatientService = async (mavp) => {
             });             
         
            let strPlSql="select servicedataid as id,servicename as name,TO_CHAR(servicedatausedate,'dd/MM HH24:MI') as value,dm_servicegroupid as manhom from tb_servicedata ts where servicecodebhyt<> '' and soluong> 0 and dm_servicegroupid > 0 and dm_serviceobjectid in (3, 4) and dm_servicegroupid in(1, 3, 4, 5,7) and patientrecordid ='"+mavp+"'";  
-           let strPatientSql="select patientname ,patientcode,dm_patientobjectid,TO_CHAR(receptiondate,'dd/MM HH24:MI') as ngayvao,TO_CHAR(medicalrecorddate_out,'dd/MM HH24:MI') as ngayra "
+           let strPatientSql="select patientname ,patientcode,dm_patientobjectid,TO_CHAR(receptiondate,'dd/MM/yyyy HH24:MI') as ngayvao,TO_CHAR(medicalrecorddate_out,'dd/MM/yyyy HH24:MI') as ngayra "
            +",chandoan_out_main_icd10 ,chandoan_out_main,insurancecode,thonxom ||'-'||tdx.dm_xaname as diachi"+
            " from tb_patientrecord tp,tb_dm_xa tdx where tdx.dm_xacode =tp.dm_xacode and patientrecordid ='"+mavp+"'";             
            //console.log(strPlSql);
@@ -341,9 +375,10 @@ const getPatientService = async (mavp) => {
             return null;
         }
 }
-const loginService = async (email1, password) => {
+const loginService = async (email1, password,ipClient) => {
     try {
         //fetch user by email
+        console.log(">loginService>>>>>>",ipClient);
         const user = await User.findOne({ email: email1 });
         if (user) {
             //compare password
@@ -357,7 +392,8 @@ const loginService = async (email1, password) => {
                 //create an access token
                 const payload = {
                     email: user.email,
-                    name: user.name
+                    name: user.name,
+                    ipclient:ipClient
                 }
 
                 const access_token = jwt.sign(
@@ -372,7 +408,8 @@ const loginService = async (email1, password) => {
                     access_token,
                     user: {
                         email: user.email,
-                        name: user.name
+                        name: user.name,
+                        ipclient:ipClient
                     }
                 };
             }
@@ -418,7 +455,7 @@ const getLsycsuaService = async function(){
         var datetime = new Date();  
         await sql.connect(sqlConfig);   ;
         //let strSql = "select *  FROM [His_xml].[dbo].[yeucau] where maloi<>'NGAY_TTOAN' and ngayyc='" + datetime.toISOString().slice(0,10) + "'";        
-        let strSql = "select top 50 *,CONVERT(VARCHAR(10), ngayyc, 120) as nyc   FROM [His_xml].[dbo].[yeucau]";        
+        let strSql = "select top 100 *,CONVERT(VARCHAR(10), ngayyc, 120) as nyc   FROM [His_xml].[dbo].[yeucau] order by ngayyc desc";        
         let result= await sql.query(strSql);  
         return result.recordset;
     } catch (error) {
@@ -439,5 +476,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }
