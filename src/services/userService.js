@@ -145,10 +145,10 @@ const getYlbacsiService = async (bacsi) => {
             return null;
         }
 }
-const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc,ngayrv) => {
+const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv) => {
     try {
         let mavp=tenbn.split("-")[0];
-        let sqlServer = "INSERT INTO yeucau (ngayrv,trangthaihs,phongth,tenbn, yeucau, dichvu,nguoiyc,ngayyc)VALUES ('"+ngayrv+"',0,'KHTH',N'"+tenbn+"',N'"+yeucau+"',N'"+dichvu+"',N'"+nguoiyc+"',GETDATE());"
+        let sqlServer = "INSERT INTO yeucau (phongrv,ngayrv,trangthaihs,phongth,tenbn, yeucau, dichvu,nguoiyc,ngayyc)VALUES (N'"+phongrv+"','"+ngayrv+"',0,'KHTH',N'"+tenbn+"',N'"+yeucau+"',N'"+dichvu+"',N'"+nguoiyc+"',GETDATE());"
         sqlServer +=";select *,CONVERT(VARCHAR(10), ngayyc, 120) as nyc from [His_xml].[dbo].[yeucau] where tenbn like'"+mavp+"-%'";        
         try {  
             await sql.connect(sqlConfig);   
@@ -187,6 +187,10 @@ const guiDuyetyeucauService = async (idyc,maquyen) => {
                 let sqlServerkhth = "delete [His_xml].[dbo].[yeucau] where idyc ='"+idyc+"'";      
                 await sql.query(sqlServerkhth);      
                 return {message:"sucess",duyet:idyc};   
+        }else if(maquyen.toLowerCase()=="cntt40576"){
+            let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='DONE',trangthaihs=1 where idyc ='"+idyc+"'";      
+            await sql.query(sqlServerkhth);      
+            return {message:"sucess",duyet:idyc};   
         }else if(rows[0].phongth=="DONE"){
             return {message:"sucess",duyet:idyc};   
         }
@@ -195,6 +199,22 @@ const guiDuyetyeucauService = async (idyc,maquyen) => {
         }
         
         
+    } catch (error) {
+        console.log(error);
+        return {message:"thất bại",duyet:idyc};
+    }
+}
+const deleteYeucauService = async (idyc,maquyen,tenbn) => {
+    try { 
+        let mavp=tenbn.split("-")[0];        
+        let sqlServer = "delete [His_xml].[dbo].[yeucau] where idyc ='"+idyc+"' and phongth='KHTH'";      
+        sqlServer +=";select *,CONVERT(VARCHAR(10), ngayyc, 120) as nyc from [His_xml].[dbo].[yeucau] where tenbn like'"+mavp+"-%'";    
+        await sql.connect(sqlConfig);             
+        let resultYc= await sql.query(sqlServer); 
+        return {           
+            dataYC:resultYc.recordset
+        };     
+       
     } catch (error) {
         console.log(error);
         return {message:"thất bại",duyet:idyc};
@@ -309,7 +329,7 @@ const getPatientService = async (mavp) => {
             });             
         
            let strPlSql="select servicedataid as id,servicename as name,TO_CHAR(servicedatausedate,'dd/MM HH24:MI') as value,dm_servicegroupid as manhom from tb_servicedata ts where servicecodebhyt<> '' and soluong> 0 and dm_servicegroupid > 0 and dm_serviceobjectid in (3, 4) and dm_servicegroupid in(1, 3, 4, 5,7) and patientrecordid ='"+mavp+"'";  
-           let strPatientSql="select patientname ,patientcode,dm_patientobjectid,TO_CHAR(receptiondate,'dd/MM/yyyy HH24:MI') as ngayvao,TO_CHAR(medicalrecorddate_out,'dd/MM/yyyy HH24:MI') as ngayra "
+           let strPatientSql="select patientname, (select roomname from tb_room tr where tr.roomid  = tp.roomid_out) as roomname ,patientcode,dm_patientobjectid,TO_CHAR(receptiondate,'dd/MM/yyyy HH24:MI') as ngayvao,TO_CHAR(medicalrecorddate_out,'dd/MM/yyyy HH24:MI') as ngayra "
            +",chandoan_out_main_icd10 ,chandoan_out_main,insurancecode,thonxom ||'-'||tdx.dm_xaname as diachi"+
            " from tb_patientrecord tp,tb_dm_xa tdx where tdx.dm_xacode =tp.dm_xacode and patientrecordid ='"+mavp+"'";             
            //console.log(strPlSql);
@@ -352,6 +372,7 @@ const getPatientService = async (mavp) => {
               //  arrayInfo.push({id:"9",name:"Địa chỉ",value:item.diachi});               
                 arrayInfo.push({id:"6",name:"Ngày vào",value:item.ngayvao});
                 arrayInfo.push({id:"7",name:"Ngày ra viện",value:item.ngayra});  
+                arrayInfo.push({id:"10",name:"Phòng ra viện",value:item.roomname});  
                               
                
             });              
@@ -476,5 +497,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }

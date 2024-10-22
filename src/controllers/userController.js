@@ -1,9 +1,8 @@
-const { createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService } = require("../services/userService");
-const logAction = async (id_act,content) => {  
- 
+const { createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService } = require("../services/userService");
+const logAction = async (id_act,content) => {   
     var os = require("os");
     var hostname = os.hostname();      
-    const logAct = await saveAtion(id_act,hostname+","+content);
+  //  const logAct = await saveAtion(id_act,hostname+","+content);
 }
 const createUser = async (req, res) => {
     const { name, email, password } = req.body;    
@@ -24,6 +23,11 @@ const getUser = async (req, res) => {
     const data = await getUserService();
     return res.status(200).json(data)
 }
+const deleteYeucau = async (req, res) => {   
+    const { idyc, role,tenbn } = req.body;   
+    const data = await deleteYeucauService(idyc, role,tenbn);
+    return res.status(200).json(data)
+}
 const getYlbacsi = async (req, res) => {
     const {bacsi} = req.body;   
     logAction("getYlbacsi",bacsi+"-"+(new Date()).getMilliseconds()); 
@@ -37,14 +41,13 @@ const getPatient = async (req, res) => {
     return res.status(200).json(data)
 }
 const guiYeucau = async (req, res) => {   
-    const {tenbn,yeucau,dichvu,nguoiyc,ngayrv} = req.body;  
+    const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;  
     logAction("guiYeucau",tenbn+"-"+(new Date()).getMilliseconds());     
-    const data = await postYeucauService(tenbn,yeucau,dichvu,nguoiyc,ngayrv);
+    const data = await postYeucauService(tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv);
     return res.status(200).json(data)
 }
 const guiDuyetyeucau = async (req, res) => {   
     const {idyc,maquyen,tenbn} = req.body;     
-    console.log(">>>>>>>>>guiduyet",idyc,maquyen,tenbn); 
     const data = await guiDuyetyeucauService(idyc,maquyen);
     return res.status(200).json(data)
 }
@@ -96,6 +99,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }
