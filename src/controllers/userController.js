@@ -1,4 +1,4 @@
-const { createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService } = require("../services/userService");
+const { createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService } = require("../services/userService");
 const logAction = async (id_act,content) => {   
     var os = require("os");
     var hostname = os.hostname();      
@@ -51,6 +51,12 @@ const guiDuyetyeucau = async (req, res) => {
     const data = await guiDuyetyeucauService(idyc,maquyen,tenbn);
     return res.status(200).json(data)
 }
+const postYcBydate = async (req, res) => {   
+    console.log(req.body);
+    const {datebc,option} = req.body;     
+    const data = await postYcBydateService(datebc,option);
+    return res.status(200).json(data)
+}
 const getLskhambenh = async (req, res) => {   
     const {phongkham} = req.body;   
     logAction("getLskhambenh",phongkham+"-"+(new Date()).getMilliseconds()); 
@@ -99,6 +105,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }
