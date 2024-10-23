@@ -165,8 +165,10 @@ const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv) => 
         return null;
     }
 }
-const guiDuyetyeucauService = async (idyc,maquyen) => {
+const guiDuyetyeucauService = async (idyc,maquyen,tenbn) => {
     try {      
+        console.log("....mvp",tenbn);
+        let mavp=tenbn.split("-")[0];        
         let sqlServer = "select * from [His_xml].[dbo].[yeucau] where idyc ='"+idyc+"'";        
         await sql.connect(sqlConfig);           
         let result= await sql.query(sqlServer);    
@@ -191,7 +193,17 @@ const guiDuyetyeucauService = async (idyc,maquyen) => {
             let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='DONE',trangthaihs=1 where idyc ='"+idyc+"'";      
             await sql.query(sqlServerkhth);      
             return {message:"sucess",duyet:idyc};   
-        }else if(rows[0].phongth=="DONE"){
+        }else if(maquyen.toLowerCase()=="mhs40576"){
+            if(mavp&&mavp!=""){
+                let sqlPlkhth = "update tb_patientrecord set duyetketoan_is = 0, duyetbhyt_is = 0  where patientrecordid ='"+mavp+"'";    
+                console.log(">>>mhs",maquyen,sqlPlkhth);  
+                const client = new Client(dbConfig); 
+                await client.connect();
+                await client.query(sqlPlkhth);
+                return {message:"sucess",duyet:idyc};   
+            }            
+        }
+        else if(rows[0].phongth=="DONE"){
             return {message:"sucess",duyet:idyc};   
         }
         else{

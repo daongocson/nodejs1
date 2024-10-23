@@ -48,7 +48,7 @@ const guiYeucau = async (req, res) => {
 }
 const guiDuyetyeucau = async (req, res) => {   
     const {idyc,maquyen,tenbn} = req.body;     
-    const data = await guiDuyetyeucauService(idyc,maquyen);
+    const data = await guiDuyetyeucauService(idyc,maquyen,tenbn);
     return res.status(200).json(data)
 }
 const getLskhambenh = async (req, res) => {   
