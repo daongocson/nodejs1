@@ -41,6 +41,7 @@ const dbConfig = {
 const getYlbacsiService = async (bacsi) => {
         try {          
             var bsArray = bacsi.split("(")[1];  
+            var bsTen = bacsi.split("(")[0];  
             bsArray= bsArray.split(")")[0];  ;     
             console.log("service.. ",bsArray);
             var datetime = new Date();   
@@ -50,12 +51,24 @@ const getYlbacsiService = async (bacsi) => {
             });             
           //  let strPlSql="select servicedataid , TO_CHAR(servicedatausedate,'HH24:MI') ngayyl,patientrecordid  from tb_servicedata ts where servicedatausedate>='" + datetime.toISOString().slice(0,10) + " 11:20' limit  50";  
            let strPlSql="select * from hisweb_getylenh('"+bsArray+"','abc')";  
+           let strPlSqlbs="select * from tb_nhanvien where nhanviencode_byt='"+bsArray+"' limit 1";  
            //console.log(strPlSql);
-           let result= await client.query(strPlSql);        
+           let result= await client.query(strPlSql);   
+           let resultBs= await client.query(strPlSqlbs);  
+           var arrayBS = [];     
            var arrayYL = [];
            var arrayTH = [];
            var arrayKQ = [];
            var rows = result.rows;
+           var rowbs = resultBs.rows;           
+           //return bác sĩ chính
+           arrayBS.push({keyid:"1", name:"Mã Bs mẫu",value:rowbs[0].nhanviencode });
+           arrayBS.push({keyid:"2", name:"Tên người dùng(gồm cả học hàm, học vị)",value:bsTen});
+           arrayBS.push({keyid:"3", name:"Họ và tên(đăng ký CCHN)",value:rowbs[0].hovaten});
+           arrayBS.push({keyid:"4", name:"Số chứng chỉ hành nghề(bác sĩ)",value:bsArray});
+           arrayBS.push({keyid:"5", name:"Số CCCD",value:rowbs[0].cmnd_number});
+           arrayBS.push({keyid:"6", name:"Mã số định danh y tế(Mã số BHXH)",value:rowbs[0].masodinhdanhyte});
+           arrayBS.push({keyid:"7", name:"Mã tk  tra cứu của người dùng",value:rowbs[0].bhxh_tkuserid});        
            rows.forEach(function(item) {  
                 if(item.manhom==1){                    
                     if(item.nguoith==bsArray){
@@ -135,6 +148,9 @@ const getYlbacsiService = async (bacsi) => {
             arrayTH.sort((date1, date2) => date1 - date2);       
             arrayKQ.sort((date1, date2) => date1 - date2);                   
             return {
+                listphanquyen:rowbs[0].listphanquyen,
+                listphongchucnang:rowbs[0].listphongchucnang,
+                dataBS: arrayBS,
                 dataYL: arrayYL,
                 dataTH: arrayTH,
                 dataKQ: arrayKQ,
@@ -166,8 +182,8 @@ const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv) => 
     }
 }
 const guiDuyetyeucauService = async (idyc,maquyen,tenbn) => {
-    try {      
-        console.log("....mvp",tenbn);
+    try {     
+       
         let mavp=tenbn.split("-")[0];        
         let sqlServer = "select * from [His_xml].[dbo].[yeucau] where idyc ='"+idyc+"'";        
         await sql.connect(sqlConfig);           
@@ -195,8 +211,7 @@ const guiDuyetyeucauService = async (idyc,maquyen,tenbn) => {
             return {message:"sucess",duyet:idyc};   
         }else if(maquyen.toLowerCase()=="mhsss"){
             if(mavp&&mavp!=""){
-                let sqlPlkhth = "update tb_patientrecord set duyetketoan_is = 0, duyetbhyt_is = 0  where patientrecordid ='"+mavp+"'";    
-                console.log(">>>mhs",maquyen,sqlPlkhth);  
+                let sqlPlkhth = "update tb_patientrecord set duyetketoan_is = 0, duyetbhyt_is = 0  where patientrecordid ='"+mavp+"'";                
                 const client = new Client(dbConfig); 
                 await client.connect();
                 await client.query(sqlPlkhth);
@@ -220,7 +235,7 @@ const deleteYeucauService = async (idyc,maquyen,tenbn) => {
     try { 
         let mavp=tenbn.split("-")[0];        
         let sqlServer = "delete [His_xml].[dbo].[yeucau] where idyc ='"+idyc+"' and phongth='KHTH'";      
-        sqlServer +=";select *,FORMAT(ngayyc, 'dd/MM/yyyy HH:mm') as nyc ,FORMAT(ngayrv, 'dd/MM/yyyy HH:mm') as nrv from [His_xml].[dbo].[yeucau] where tenbn like'"+mavp+"-%'";    
+        sqlServer +=";select *,FORMAT(ngayyc, 'dd/MM/yyyy HH:mm') as nyc ,FORMAT(ngayrv, 'dd/MM/yyyy HH:mm') as nrv from [His_xml].[dbo].[yeucau] where tenbn like'"+mavp+"-%'";          
         await sql.connect(sqlConfig);             
         let resultYc= await sql.query(sqlServer); 
         return {           
@@ -235,15 +250,13 @@ const deleteYeucauService = async (idyc,maquyen,tenbn) => {
 const postYcBydateService = async (datebc,option) => {   
     let sqlServer="";
     try {
-
         if(option==1){
             sqlServer ="select *,FORMAT(ngayyc, 'dd/MM/yyyy HH:mm') as nyc,FORMAT(ngayrv, 'dd/MM/yyyy HH:mm') nrv  from [His_xml].[dbo].[yeucau] "
             +"where CONVERT(VARCHAR(10), ngayyc, 120)='"+datebc+"' and CONVERT(VARCHAR(10), ngayrv, 120)='"+datebc+"'";    
         }else{
             sqlServer ="select *,FORMAT(ngayyc, 'dd/MM/yyyy HH:mm') as nyc,FORMAT(ngayrv, 'dd/MM/yyyy HH:mm') as nrv from [His_xml].[dbo].[yeucau] "
             +"where CONVERT(VARCHAR(10), ngayyc, 120)='"+datebc+"' and  CONVERT(VARCHAR(10), ngayrv, 120)!='"+datebc+"'";      
-        }
-        console.log(sqlServer);      
+        }          
         await sql.connect(sqlConfig);             
         let resultYc= await sql.query(sqlServer); 
         return resultYc.recordset

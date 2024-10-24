@@ -51,8 +51,7 @@ const guiDuyetyeucau = async (req, res) => {
     const data = await guiDuyetyeucauService(idyc,maquyen,tenbn);
     return res.status(200).json(data)
 }
-const postYcBydate = async (req, res) => {   
-    console.log(req.body);
+const postYcBydate = async (req, res) => {  
     const {datebc,option} = req.body;     
     const data = await postYcBydateService(datebc,option);
     return res.status(200).json(data)

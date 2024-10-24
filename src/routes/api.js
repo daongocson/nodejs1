@@ -18,7 +18,7 @@ routerAPI.post("/postPhongkham", getLskhambenh);
 routerAPI.post("/postchamcongid", getChamcongId);
 routerAPI.post("/postycsua", guiYeucau);
 routerAPI.post("/postduyetyc", guiDuyetyeucau);
-routerAPI.post("/postycbydate ", deleteYeucau);
+routerAPI.post("/deleteYeucau", deleteYeucau);
 routerAPI.post("/postycbydate", postYcBydate);
 
 routerAPI.get("/user", getUser);
