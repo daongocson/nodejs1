@@ -5,7 +5,13 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { Client } = require('pg');
 const saltRounds = 10;
-
+const dbConfig = {
+    user: 'postgres',
+    password: 'bvma@ehc.vn',
+    host: '113.160.170.53',
+    port: '2121',
+    database: 'bvminhan',
+    };
 const createUserService = async (name, email, password) => {
     try {
         //check user exist
@@ -31,19 +37,92 @@ const createUserService = async (name, email, password) => {
         return null;
     }
 }
-const dbConfig = {
-    user: 'postgres',
-    password: 'bvma@ehc.vn',
-    host: '113.160.170.53',
-    port: '2121',
-    database: 'bvminhan',
-    };
+const postFilldoctorService = async (tenbs) => {   
+    try {        
+        let strPlSqlbs="select row_number() OVER () ROWNUM ,* from ("
+        +"select distinct nhanvienemail,nhanvienphone, CASE WHEN POSITION('-' in nhanviencode)>0 then substring(nhanviencode,0,POSITION('-' in nhanviencode))"
+        +" 	else nhanviencode end  as nvcode "
+        +"from tb_nhanvien tn where nhanviendisable=0 and nhanviencode like'"+tenbs+"%') SS";         
+        const client = new Client(dbConfig); 
+        await client.connect().then(() => {
+           // console.log('Connected to PostgreSQL database');
+        });          
+        let resultBs= await client.query(strPlSqlbs);         
+        return resultBs.rows;
+    } catch (error) {
+        console.log("postFilldo",error);
+    }
+}
+const postcreatenickbsService = async (bsData) => {   
+    try {        
+        let PlCheck= "select * from tb_nhanvien where nhanviencode= '"+bsData.nick+"'";      
+        const client = new Client(dbConfig); 
+        await client.connect();
+        let resultCheck= await client.query(PlCheck);    
+        if(resultCheck.rows.length>0){
+            return {message:"Fail",duyet:"Acount đã tồn tại"};  
+        }else{
+           /* let strPlSqlbs="insert into tb_nhanvien(nhanviencode,nhanviencode_byt ,nhanvienname,nhanvienpassword,"
+            +"dm_nhanvientypeid,nhanvienphone,nhanviendisable,khoachucnangid,nhanvienemail,listphanquyen,listphongchucnang,"
+            +"cmnd_number,hovaten,masodinhdanhyte,bhxh_tkuserid) values('"+bsData.nick+"abcd','"+bsData.cchn+"','"+bsData.nickname+"','"         
+            +"1',4,'"+bsData.phonebsekip+"',0,44,'"+bsData.tenbsekip+"','"+bsData.quyen+"','"+bsData.phong+"','"
+            +bsData.cccd+"','"+bsData.tencchn+"','"+bsData.msdinhdanh+"','"+bsData.tktracuu+"')"; */
+         //   await client.query(strPlSqlbs);    
+         let sqlServer="insert into tbnhanvien(nhanviencode,nhanviencode_byt ,nhanvienname,nhanvienpassword,"
+         +"dm_nhanvientypeid,nhanvienphone,nhanviendisable,khoachucnangid,nhanvienemail,listphanquyen,listphongchucnang,"
+         +"cmnd_number,hovaten,masodinhdanhyte,bhxh_tkuserid,duyet,ngaytao) values('"+bsData.nick+"abcd',N'"+bsData.cchn+"',N'"+bsData.nickname+"','"         
+         +"1',4,'"+bsData.phonebsekip+"',0,44,N'"+bsData.tenbsekip+"','"+bsData.quyen+"','"+bsData.phong+"','"
+         +bsData.cccd+"',N'"+bsData.tencchn+"','"+bsData.msdinhdanh+"','"+bsData.tktracuu+"','NONE',getdate())";       
+          await sql.connect(sqlConfig);   
+         let result= await sql.query(sqlServer);      
+         return {message:"sucess",duyet:"Tạo nick ("+bsData.nick+") thành công, mời đăng nhập hệ thống"};  
+        }        
+    } catch (error) {
+        console.log("postFilldo",error);
+          return  {message:"fail",duyet:"Lỗi kết nối, quá tải hệ thống"};  
+    }
+}
+const postuserduyetService = async (user) => {   
+    try {    
+        if(user.action=="view"){
+            let sqlServer= "select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] where duyet='NONE' order by ngaytao" ;      
+            await sql.connect(sqlConfig);   
+            let result= await sql.query(sqlServer);   
+            return result.recordset;
+        }
+        else if(user.action.toLowerCase()=="it02"){            
+            let strPlSqlbs="insert into tb_nhanvien(nhanviencode,nhanviencode_byt ,nhanvienname,nhanvienpassword,"
+            +"dm_nhanvientypeid,nhanvienphone,nhanviendisable,khoachucnangid,nhanvienemail,listphanquyen,listphongchucnang,"
+            +"cmnd_number,hovaten,masodinhdanhyte,bhxh_tkuserid) values('"+user.nhanviencode+"','"+user.nhanviencode_byt+"','"+user.nhanvienname+"','"         
+            +"1',4,'"+user.nhanvienphone+"',0,44,'"+user.nhanvienemail+"','"+user.listphanquyen+"','"+user.listphongchucnang+"','"
+            +user.cmnd_number+"','"+user.hovaten+"','"+user.masodinhdanhyte+"','"+user.bhxh_tkuserid+"')"; 
+            const client = new Client(dbConfig); 
+            await client.connect();
+            await client.query(strPlSqlbs); 
+            return {message:"sucess",duyet:"Tạo nick ("+user.nhanviencode+") thành công, mời đăng nhập hệ thống"};  
+        }
+        else if(user.action.toLowerCase()=="cntt40576"){   
+            let sqlServer= "delete from [His_xml].[dbo].[tbnhanvien] where idnv='"+user.idnv+"'" ;      
+            sqlServer+=";select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] where duyet='NONE' order by ngaytao" ;      
+            await sql.connect(sqlConfig);   
+            let result= await sql.query(sqlServer);   
+            return result.recordset;
+        }
+        else{
+            return  {message:"fail",duyet:"Lỗi hệ thống, không duyệt được"};  
+        }
+        
+        
+    } catch (error) {
+        console.log("postFilldo",error);
+        return  {message:"fail",duyet:"Lỗi kết nối, quá tải hệ thống"};  
+    }
+}
 const getYlbacsiService = async (bacsi) => {
         try {          
             var bsArray = bacsi.split("(")[1];  
             var bsTen = bacsi.split("(")[0];  
-            bsArray= bsArray.split(")")[0];  ;     
-            console.log("service.. ",bsArray);
+            bsArray= bsArray.split(")")[0];     
             var datetime = new Date();   
             const client = new Client(dbConfig); 
             await client.connect().then(() => {
@@ -191,12 +270,12 @@ const guiDuyetyeucauService = async (idyc,maquyen,tenbn) => {
         var rows = result.recordset;
         if(maquyen.toLowerCase()=="sam03"){
             if(rows[0].phongth=="KHTH"){
-                let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='IT' where idyc ='"+idyc+"'";      
+                let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='IT-X' where idyc ='"+idyc+"'";      
                 await sql.query(sqlServerkhth);      
                 return {message:"sucess",duyet:idyc};
             }
         }else if(maquyen.toLowerCase()=="it02"){
-            if(rows[0].phongth=="IT"){
+            if(rows[0].phongth=="IT-X"){
                 let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='DONE',trangthaihs=1 where idyc ='"+idyc+"'";      
                 await sql.query(sqlServerkhth);      
                 return {message:"sucess",duyet:idyc};            }
@@ -217,6 +296,10 @@ const guiDuyetyeucauService = async (idyc,maquyen,tenbn) => {
                 await client.query(sqlPlkhth);
                 return {message:"sucess",duyet:idyc};   
             }            
+        }else if(maquyen.toLowerCase()=="it03"){
+            let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='TRAVE',trangthaihs=1 where idyc ='"+idyc+"'";      
+            await sql.query(sqlServerkhth);      
+            return {message:"sucess",duyet:idyc};          
         }
         else if(rows[0].phongth=="DONE"){
             return {message:"sucess",duyet:idyc};   
@@ -445,8 +528,7 @@ const getPatientService = async (mavp) => {
 }
 const loginService = async (email1, password,ipClient) => {
     try {
-        //fetch user by email
-        console.log(">loginService>>>>>>",ipClient);
+        //fetch user by email       
         const user = await User.findOne({ email: email1 });
         if (user) {
             //compare password
@@ -544,5 +626,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }

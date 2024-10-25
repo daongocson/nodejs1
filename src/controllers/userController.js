@@ -1,4 +1,4 @@
-const { createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService } = require("../services/userService");
+const { createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService } = require("../services/userService");
 const logAction = async (id_act,content) => {   
     var os = require("os");
     var hostname = os.hostname();      
@@ -34,10 +34,25 @@ const getYlbacsi = async (req, res) => {
     const data = await getYlbacsiService(bacsi);
     return res.status(200).json(data)
 }
+const postFilldoctor = async (req, res) => {   
+    const {bacsi} = req.body;       
+    const data = await postFilldoctorService(bacsi);
+    return res.status(200).json(data)
+}
+const postcreatenickbs = async (req, res) => {   
+    const bsData = req.body;       
+    const data = await postcreatenickbsService(bsData);        
+    return res.status(200).json(data)
+}
 const getPatient = async (req, res) => {   
     const {mavp} = req.body;   
     logAction("getPatient",mavp+"-"+(new Date()).getMilliseconds()); 
     const data = await getPatientService(mavp);
+    return res.status(200).json(data)
+}
+const postuserduyet = async (req, res) => {   
+    const user = req.body;       
+    const data = await postuserduyetService(user);
     return res.status(200).json(data)
 }
 const guiYeucau = async (req, res) => {   
@@ -104,6 +119,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }

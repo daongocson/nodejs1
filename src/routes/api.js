@@ -1,5 +1,5 @@
 const express = require('express');
-const { createUser, handleLogin, getUser,  getAccount,getLsError, getLsDoctors, getYlbacsi, getPatient, getLsPhongkham, getLskhambenh, getLsCskh, getLschamcong, getChamcongId, guiYeucau, getLsycsua, guiDuyetyeucau, deleteYeucau, postYcBydate } = require('../controllers/userController');
+const { createUser, handleLogin, getUser,  getAccount,getLsError, getLsDoctors, getYlbacsi, getPatient, getLsPhongkham, getLskhambenh, getLsCskh, getLschamcong, getChamcongId, guiYeucau, getLsycsua, guiDuyetyeucau, deleteYeucau, postYcBydate, postFilldoctor, postcreatenickbs, postuserduyet } = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delay = require('../middleware/delay');
 const routerAPI = express.Router();
@@ -20,6 +20,9 @@ routerAPI.post("/postycsua", guiYeucau);
 routerAPI.post("/postduyetyc", guiDuyetyeucau);
 routerAPI.post("/deleteYeucau", deleteYeucau);
 routerAPI.post("/postycbydate", postYcBydate);
+routerAPI.post("/postfilldoctor", postFilldoctor);
+routerAPI.post("/createnickbs", postcreatenickbs);
+routerAPI.post("/getuserduyet", postuserduyet);
 
 routerAPI.get("/user", getUser);
 routerAPI.get("/lsycsua", getLsycsua);
