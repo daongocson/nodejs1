@@ -262,8 +262,10 @@ const getYlbacsiService = async (bacsi) => {
 const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv) => {
     try {
         let mavp=tenbn.split("-")[0];
+        if(ngayrv.includes("0001"))
+            ngayrv="";
         let sqlServer = "INSERT INTO yeucau (phongrv,ngayrv,trangthaihs,phongth,tenbn, yeucau, dichvu,nguoiyc,ngayyc)VALUES (N'"+phongrv+"','"+ngayrv+"',0,'KHTH',N'"+tenbn+"',N'"+yeucau+"',N'"+dichvu+"',N'"+nguoiyc+"',GETDATE());"
-        sqlServer +=";select *,CONVERT(VARCHAR(10), ngayyc, 120) as nyc from [His_xml].[dbo].[yeucau] where tenbn like'"+mavp+"-%'";        
+        sqlServer +=";select *,CONVERT(VARCHAR(10), ngayyc, 120) as nyc from [His_xml].[dbo].[yeucau] where tenbn like'"+mavp+"-%'";  
         try {  
             await sql.connect(sqlConfig);   
             let result= await sql.query(sqlServer); 
