@@ -42,7 +42,7 @@ const postFilldoctorService = async (tenbs) => {
         let strPlSqlbs="select row_number() OVER () ROWNUM ,* from ("
         +"select distinct nhanvienemail,nhanvienphone, CASE WHEN POSITION('-' in nhanviencode)>0 then substring(nhanviencode,0,POSITION('-' in nhanviencode))"
         +" 	else nhanviencode end  as nvcode "
-        +"from tb_nhanvien tn where nhanviendisable=0 and nhanviencode like'"+tenbs+"%') SS";         
+        +"from tb_nhanvien tn where nhanviendisable=0 and nhanviencode like'"+tenbs.toLowerCase()+"%') SS";         
         const client = new Client(dbConfig); 
         await client.connect().then(() => {
            // console.log('Connected to PostgreSQL database');
@@ -55,7 +55,7 @@ const postFilldoctorService = async (tenbs) => {
 }
 const postcreatenickbsService = async (bsData) => {   
     try {        
-        let PlCheck= "select * from tb_nhanvien where nhanviencode= '"+bsData.nick+"'";      
+        let PlCheck= "select * from tb_nhanvien where nhanviencode= '"+bsData.nick+"'";              
         const client = new Client(dbConfig); 
         await client.connect();
         let resultCheck= await client.query(PlCheck);    
@@ -68,24 +68,25 @@ const postcreatenickbsService = async (bsData) => {
             +"1',4,'"+bsData.phonebsekip+"',0,44,'"+bsData.tenbsekip+"','"+bsData.quyen+"','"+bsData.phong+"','"
             +bsData.cccd+"','"+bsData.tencchn+"','"+bsData.msdinhdanh+"','"+bsData.tktracuu+"')"; */
          //   await client.query(strPlSqlbs);    
-         let sqlServer="insert into tbnhanvien(nhanviencode,nhanviencode_byt ,nhanvienname,nhanvienpassword,"
+         let sqlServer="insert into  [His_xml].[dbo].[tbnhanvien](nhanviencode,nhanviencode_byt ,nhanvienname,nhanvienpassword,"
          +"dm_nhanvientypeid,nhanvienphone,nhanviendisable,khoachucnangid,nhanvienemail,listphanquyen,listphongchucnang,"
-         +"cmnd_number,hovaten,masodinhdanhyte,bhxh_tkuserid,duyet,ngaytao) values('"+bsData.nick+"abcd',N'"+bsData.cchn+"',N'"+bsData.nickname+"','"         
+         +"cmnd_number,hovaten,masodinhdanhyte,bhxh_tkuserid,duyet,ngaytao) values('"+bsData.nick+"',N'"+bsData.cchn+"',N'"+bsData.nickname+"','"         
          +"1',4,'"+bsData.phonebsekip+"',0,44,N'"+bsData.tenbsekip+"','"+bsData.quyen+"','"+bsData.phong+"','"
-         +bsData.cccd+"',N'"+bsData.tencchn+"','"+bsData.msdinhdanh+"','"+bsData.tktracuu+"','NONE',getdate())";       
+         +bsData.cccd+"',N'"+bsData.tencchn+"','"+bsData.msdinhdanh+"','"+bsData.tktracuu+"','IT-DUYET',getdate())";       
+        // console.log(sqlServer);
           await sql.connect(sqlConfig);   
          let result= await sql.query(sqlServer);      
-         return {message:"sucess",duyet:"Tạo nick ("+bsData.nick+") thành công, mời đăng nhập hệ thống"};  
+         return {message:"sucess",duyet:"Tạo nick ("+bsData.nick+") thành công, Chờ IT duyệt Accout"};  
         }        
     } catch (error) {
         console.log("postFilldo",error);
           return  {message:"fail",duyet:"Lỗi kết nối, quá tải hệ thống"};  
     }
 }
-const postuserduyetService = async (user) => {   
+const postuserduyetService = async (user) => {       
     try {    
         if(user.action=="view"){
-            let sqlServer= "select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] where duyet='NONE' order by ngaytao" ;      
+            let sqlServer= "select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by ngaytao" ;      
             await sql.connect(sqlConfig);   
             let result= await sql.query(sqlServer);   
             return result.recordset;
@@ -98,15 +99,33 @@ const postuserduyetService = async (user) => {
             +user.cmnd_number+"','"+user.hovaten+"','"+user.masodinhdanhyte+"','"+user.bhxh_tkuserid+"')"; 
             const client = new Client(dbConfig); 
             await client.connect();
-            await client.query(strPlSqlbs); 
-            return {message:"sucess",duyet:"Tạo nick ("+user.nhanviencode+") thành công, mời đăng nhập hệ thống"};  
-        }
-        else if(user.action.toLowerCase()=="cntt40576"){   
-            let sqlServer= "delete from [His_xml].[dbo].[tbnhanvien] where idnv='"+user.idnv+"'" ;      
-            sqlServer+=";select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] where duyet='NONE' order by ngaytao" ;      
+            await client.query(strPlSqlbs);
+            client.end(); 
+            // update chức năng duyệt
+            let sqlupdate = "Update [His_xml].[dbo].[tbnhanvien] set duyet='DUYET' where idnv='"+user.idnv+"'";
+            sqlupdate+=";select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by ngaytao" ;   
             await sql.connect(sqlConfig);   
-            let result= await sql.query(sqlServer);   
-            return result.recordset;
+            let result= await sql.query(sqlupdate);  
+            result.duyet = "Tạo nick ("+user.nhanviencode+") Trên EHC thành công, mời đăng nhập hệ thống"
+            return result;
+            sql.close(); 
+            //return {message:"sucess",duyet:"Tạo nick ("+user.nhanviencode+") thành công, mời đăng nhập hệ thống"};  
+        } else if(user.action.toLowerCase()=="it02phong"){   
+            //tạo full phòng chức năng            
+            let sqlServer= "Update [His_xml].[dbo].[tbnhanvien] set listphongchucnang='628;464;469;436;437;438;439;440;441;442;605;443;448;447;449;541;638;477;637;629;450;498;454;497;500;396;395;392;341;355;354;543;523;352;472;486;481;452;504;635;402;636;407;667'"
+             +" where idnv='"+user.idnv+"'";           
+            await sql.connect(sqlConfig);   
+            let result= await sql.query(sqlServer);  
+            sql.close(); 
+            return {duyet:"Thêm quyền thành công"};
+        }
+        else if(user.action.toLowerCase()=="delete40576"){               
+            let sqlServer= "delete from [His_xml].[dbo].[tbnhanvien] where idnv='"+user.idnv+"'" ;      
+            sqlServer+=";select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by ngaytao" ;                    
+            await sql.connect(sqlConfig);   
+            let result= await sql.query(sqlServer);  
+            sql.close(); 
+            return result;
         }
         else{
             return  {message:"fail",duyet:"Lỗi hệ thống, không duyệt được"};  
