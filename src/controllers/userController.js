@@ -1,13 +1,10 @@
-const { createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService } = require("../services/userService");
+const { createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService } = require("../services/userService");
 const logAction = async (id_act,content) => {   
-    var os = require("os");
-    var hostname = os.hostname();      
-  //  const logAct = await saveAtion(id_act,hostname+","+content);
+    var os = require("os");    var hostname = os.hostname();      
+  
 }
 const createUser = async (req, res) => {
-    const { name, email, password } = req.body;    
-    //const data = await createUserService(name, email, password);
-    logAction("createUser","G-"+(new Date()).getMilliseconds());
+    const { name, email, password } = req.body; 
     return res.status(200).json({name, email, password})
 }
 
@@ -18,8 +15,7 @@ const handleLogin = async (req, res) => {
     return res.status(200).json(data)
 }
 
-const getUser = async (req, res) => {   
-    logAction("getUser","getUser"+"G-"+(new Date()).getMilliseconds()); 
+const getUser = async (req, res) => {     
     const data = await getUserService();
     return res.status(200).json(data)
 }
@@ -29,8 +25,7 @@ const deleteYeucau = async (req, res) => {
     return res.status(200).json(data)
 }
 const getYlbacsi = async (req, res) => {
-    const {bacsi} = req.body;   
-    logAction("getYlbacsi",bacsi+"-"+(new Date()).getMilliseconds()); 
+    const {bacsi} = req.body;      
     const data = await getYlbacsiService(bacsi);
     return res.status(200).json(data)
 }
@@ -45,8 +40,7 @@ const postcreatenickbs = async (req, res) => {
     return res.status(200).json(data)
 }
 const getPatient = async (req, res) => {   
-    const {mavp} = req.body;   
-    logAction("getPatient",mavp+"-"+(new Date()).getMilliseconds()); 
+    const {mavp} = req.body;      
     const data = await getPatientService(mavp);
     return res.status(200).json(data)
 }
@@ -55,10 +49,19 @@ const postuserduyet = async (req, res) => {
     const data = await postuserduyetService(user);
     return res.status(200).json(data)
 }
+const postmaquyen = async (req, res) => {   
+    const mqdata = req.body;       
+    const data = await postmaquyenService(mqdata);
+    return res.status(200).json(data)
+}
 const guiYeucau = async (req, res) => {   
-    const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;  
-    logAction("guiYeucau",tenbn+"-"+(new Date()).getMilliseconds());     
+    const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;      
     const data = await postYeucauService(tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv);
+    return res.status(200).json(data)
+}
+const fetchycbydate = async (req, res) => {   
+    const datadate = req.body;      
+    const data = await fetchycbydateService(datadate);
     return res.status(200).json(data)
 }
 const guiDuyetyeucau = async (req, res) => {   
@@ -72,29 +75,24 @@ const postYcBydate = async (req, res) => {
     return res.status(200).json(data)
 }
 const getLskhambenh = async (req, res) => {   
-    const {phongkham} = req.body;   
-    logAction("getLskhambenh",phongkham+"-"+(new Date()).getMilliseconds()); 
+    const {phongkham} = req.body;       
     const data = await getLsKhambenhService(phongkham);
     return res.status(200).json(data)
 }
 const getChamcongId = async (req, res) => {      
-    const {manv} = req.body;   
-    logAction("getChamcongId",manv+"-"+(new Date()).getMilliseconds()); 
+    const {manv} = req.body;     
     const data = await getLsChamcongIdService(manv);
     return res.status(200).json(data)
 }
-const getLsError = async (req, res) => {
-    logAction("getLsError","G-"+(new Date()).getMilliseconds());  
+const getLsError = async (req, res) => {   
     const data = await getLsErrorService(req,res);
     return res.status(200).json(data);
 }
-const getLsycsua = async (req, res) => {
-    logAction("getLsycsua","G-"+(new Date()).getMilliseconds());    
+const getLsycsua = async (req, res) => {   
     const data = await getLsycsuaService();
     return res.status(200).json(data)
 }
-const getLsPhongkham = async (req, res) => {
-    logAction("getLsPhongkham","G-"+(new Date()).getMilliseconds()); 
+const getLsPhongkham = async (req, res) => {    
     const data = await getLsPkService(req,res);
     return res.status(200).json(data);
 }
@@ -103,22 +101,19 @@ const getLsCskh = async (req, res) => {
     const data = await getLsCskhService(req,res);
     return res.status(200).json(data);
 }
-const getLschamcong = async (req, res) => {  
-    logAction("getLschamcong","G-"+(new Date()).getMilliseconds()); 
+const getLschamcong = async (req, res) => {     
     const data = await getLsChamcongService(req,res);
     return res.status(200).json(data);
 }
-const getLsDoctors = async (req, res) => {
-    logAction("getLsDoctors","G-"+(new Date()).getMilliseconds()); 
+const getLsDoctors = async (req, res) => {   
     const data = await getLsDoctorService(req,res);
     return res.status(200).json(data);
 }
-const getAccount = async (req, res) => {
-   // logAction("getAccount","getAccount"); 
+const getAccount = async (req, res) => {  
     return res.status(200).json(req.user)
 }
 
 module.exports = {
-    postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }

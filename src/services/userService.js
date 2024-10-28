@@ -53,6 +53,20 @@ const postFilldoctorService = async (tenbs) => {
         console.log("postFilldo",error);
     }
 }
+const fetchycbydateService = async (datadate) => {   
+    try {
+        
+        //await sql.connect(sqlConfig);   ;
+        //let strSql = "select *  FROM [His_xml].[dbo].[yeucau] where maloi<>'NGAY_TTOAN' and ngayyc='" + datetime.toISOString().slice(0,10) + "'";        
+        let strSql = "select top 100 *,FORMAT(ngayyc, 'dd/MM/yyyy HH:mm') as nyc,FORMAT(ngayrv, 'dd/MM/yyyy HH:mm') as nrv "  
+        +"FROM [His_xml].[dbo].[yeucau] where ngayyc>'"+datadate.ngayyc+"' and ngayyc<'"+datadate.ngayyc+" 23:59:00'order by ngayyc desc";        
+        let result= await sql.query(strSql);         
+        return result.recordset;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 const postcreatenickbsService = async (bsData) => {   
     try {        
         let PlCheck= "select * from tb_nhanvien where nhanviencode= '"+bsData.nick+"'";              
@@ -112,11 +126,12 @@ const postuserduyetService = async (user) => {
             //return {message:"sucess",duyet:"Tạo nick ("+user.nhanviencode+") thành công, mời đăng nhập hệ thống"};  
         } else if(user.action.toLowerCase()=="it02phong"){   
             //tạo full phòng chức năng            
-            let sqlServer= "Update [His_xml].[dbo].[tbnhanvien] set listphongchucnang='628;464;469;436;437;438;439;440;441;442;605;443;448;447;449;541;638;477;637;629;450;498;454;497;500;396;395;392;341;355;354;543;523;352;472;486;481;452;504;635;402;636;407;667'"
-             +" where idnv='"+user.idnv+"'";           
-            await sql.connect(sqlConfig);   
-            let result= await sql.query(sqlServer);  
-            sql.close(); 
+            let sqlPlSQL= "update tb_nhanvien set listphongchucnang='628;464;469;436;437;438;439;440;441;442;605;443;448;447;449;541;638;477;637;629;450;498;454;497;500;396;395;392;341;355;354;543;523;352;472;486;481;452;504;635;402;636;407;667'"
+             +" where nhanviencode='"+user.nhanviencode+"'";                 
+             const client = new Client(dbConfig); 
+             await client.connect();
+             await client.query(sqlPlSQL);
+             client.end(); 
             return {duyet:"Thêm quyền thành công"};
         }
         else if(user.action.toLowerCase()=="delete40576"){               
@@ -135,6 +150,20 @@ const postuserduyetService = async (user) => {
     } catch (error) {
         console.log("postFilldo",error);
         return  {message:"fail",duyet:"Lỗi kết nối, quá tải hệ thống"};  
+    }
+}
+const postmaquyenService = async (mqdata) => {       
+    try {   
+        if(mqdata.maquyen=="kt02"){
+            let sqlServer = "delete [His_xml].[dbo].[yeucau] where YEAR(ngayrv)=1900";         
+            await sql.connect(sqlConfig);   
+            await sql.query(sqlServer);  
+            return  {message:"sucess",duyet:"xóa thành công yêu cầu"};  
+        }
+        return  {message:"fail",duyet:"yêu cầu thất bại"};  
+    }
+    catch(error){
+        console.log(error.message);
     }
 }
 const getYlbacsiService = async (bacsi) => {
@@ -291,13 +320,13 @@ const guiDuyetyeucauService = async (idyc,maquyen,tenbn) => {
         var rows = result.recordset;
         if(maquyen.toLowerCase()=="sam03"){
             if(rows[0].phongth=="KHTH"){
-                let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='IT-X' where idyc ='"+idyc+"'";      
+                let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='IT-X',ngayduyet=getdate() where idyc ='"+idyc+"'";      
                 await sql.query(sqlServerkhth);      
                 return {message:"sucess",duyet:idyc};
             }
         }else if(maquyen.toLowerCase()=="it02"){
             if(rows[0].phongth=="IT-X"){
-                let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='DONE',trangthaihs=1 where idyc ='"+idyc+"'";      
+                let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='DONE',trangthaihs=1,ngayduyet=getdate() where idyc ='"+idyc+"'";      
                 await sql.query(sqlServerkhth);      
                 return {message:"sucess",duyet:idyc};            }
                 
@@ -306,7 +335,7 @@ const guiDuyetyeucauService = async (idyc,maquyen,tenbn) => {
                 await sql.query(sqlServerkhth);      
                 return {message:"sucess",duyet:idyc};   
         }else if(maquyen.toLowerCase()=="cntt40576"){
-            let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='DONE',trangthaihs=1 where idyc ='"+idyc+"'";      
+            let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='DONE',trangthaihs=1 ,ngayduyet=getdate() where idyc ='"+idyc+"'";      
             await sql.query(sqlServerkhth);      
             return {message:"sucess",duyet:idyc};   
         }else if(maquyen.toLowerCase()=="mhsss"){
@@ -315,10 +344,17 @@ const guiDuyetyeucauService = async (idyc,maquyen,tenbn) => {
                 const client = new Client(dbConfig); 
                 await client.connect();
                 await client.query(sqlPlkhth);
+                try{
+                    let sqlupdate = "";
+                    let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='DONE',trangthaihs=1,ngayduyet=getdate() where idyc ='"+idyc+"'";      
+                    await sql.query(sqlServerkhth);    
+                }catch{
+                    console.log("mhsss Update done fail");
+                }
                 return {message:"sucess",duyet:idyc};   
             }            
         }else if(maquyen.toLowerCase()=="it03"){
-            let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='TRAVE',trangthaihs=1 where idyc ='"+idyc+"'";      
+            let sqlServerkhth = "update [His_xml].[dbo].[yeucau] set phongth='TRAVE',trangthaihs=1,ngayduyet=getdate() where idyc ='"+idyc+"'";      
             await sql.query(sqlServerkhth);      
             return {message:"sucess",duyet:idyc};          
         }
@@ -353,19 +389,43 @@ const deleteYeucauService = async (idyc,maquyen,tenbn) => {
 }
 const postYcBydateService = async (datebc,option) => {   
     let sqlServer="";
+    await sql.connect(sqlConfig);   
     try {
         if(option==1){
-            sqlServer ="select *,FORMAT(ngayyc, 'dd/MM/yyyy HH:mm') as nyc,FORMAT(ngayrv, 'dd/MM/yyyy HH:mm') nrv  from [His_xml].[dbo].[yeucau] "
-            +"where CONVERT(VARCHAR(10), ngayyc, 120)='"+datebc+"' and CONVERT(VARCHAR(10), ngayrv, 120)='"+datebc+"'";    
+            sqlServer ="select *,FORMAT(ngayyc, 'dd/MM/yyyy HH:mm') as nyc,FORMAT(ngayduyet, 'dd/MM/yyyy HH:mm') as nduyet,FORMAT(ngayrv, 'dd/MM/yyyy HH:mm') nrv  from [His_xml].[dbo].[yeucau] "
+            +"where CONVERT(VARCHAR(10), ngayduyet, 120)='"+datebc+"' and CONVERT(VARCHAR(10), ngayrv, 120)='"+datebc+"' order by ngayduyet desc";    
+            let resultYc= await sql.query(sqlServer); 
+            return resultYc.recordset
+        }else if(option==2){
+            sqlServer ="select *,FORMAT(ngayyc, 'dd/MM/yyyy HH:mm') as nyc,FORMAT(ngayduyet, 'dd/MM/yyyy HH:mm') as nduyet,FORMAT(ngayrv, 'dd/MM/yyyy HH:mm') as nrv from [His_xml].[dbo].[yeucau] "
+            +"where CONVERT(VARCHAR(10), ngayduyet, 120)='"+datebc+"' and  CONVERT(VARCHAR(10), ngayrv, 120)!='"+datebc+"' order by ngayduyet desc";      
+            let resultYc= await sql.query(sqlServer); 
+            return resultYc.recordset
         }else{
-            sqlServer ="select *,FORMAT(ngayyc, 'dd/MM/yyyy HH:mm') as nyc,FORMAT(ngayrv, 'dd/MM/yyyy HH:mm') as nrv from [His_xml].[dbo].[yeucau] "
-            +"where CONVERT(VARCHAR(10), ngayyc, 120)='"+datebc+"' and  CONVERT(VARCHAR(10), ngayrv, 120)!='"+datebc+"'";      
-        }          
-        await sql.connect(sqlConfig);             
-        let resultYc= await sql.query(sqlServer); 
-        return resultYc.recordset
-        
-       
+            sqlServer = "select SUBSTRING(tenbn,0,CHARINDEX('-' ,tenbn)) as SttRec,tenbn,yeucau,FORMAT(ngayyc, 'dd/MM/yyyy HH:mm') as nyc,FORMAT(ngayduyet, 'dd/MM/yyyy HH:mm') as nduyet,FORMAT(ngayrv, 'dd/MM/yyyy HH:mm') as nrv FROM [His_xml].[dbo].[yeucau]  where YEAR(ngayrv)=1900";
+            let rkq= await sql.query(sqlServer); 
+            let npid = "(";
+            rkq.recordset.forEach(function(item) { 
+                npid+= item.SttRec+",";
+            });          
+            if(npid.length<3)
+                return {thongbao:"Dữ liệu đã được update mới",duyet:"Dữ liệu update:"+datebc};           
+            npid = npid.substring(0, npid.length-1)+")";           
+            let strPlSql="select patientrecordid ,to_char(medicalrecorddate_out,'yyyy-mm-dd HH:mm:ss') nrv from tb_patientrecord tp where patientrecordid in"+npid+"and medicalrecorddate_out !='0001-01-01 00:00:00.000'";  
+            const client = new Client(dbConfig); 
+            await client.connect();
+            let rkqPl= await client.query(strPlSql);             
+            if(rkqPl.rows.length!=0){
+                let sqlServerloop = "";  
+                rkqPl.rows.forEach(function(item) { 
+                    plPid+="update [His_xml].[dbo].[yeucau] set ngayrv='"+item.nrv+"' where tenbn like '"+item.patientrecordid+"-%';"                
+                });  
+                await sql.query(sqlServerloop);
+                return {thongbao:"dữ liệu được update",duyet:"Update thành công:"+datebc}; 
+            }else{              
+                return rkq.recordset;
+            }
+        }
     } catch (error) {
         console.log(error);
         return {message:"thất bại",duyet:datebc};
@@ -647,5 +707,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }
