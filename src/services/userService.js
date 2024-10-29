@@ -116,7 +116,7 @@ const postuserduyetService = async (user) => {
             await client.query(strPlSqlbs);
             client.end(); 
             // update chức năng duyệt
-            let sqlupdate = "Update [His_xml].[dbo].[tbnhanvien] set duyet='DUYET' where idnv='"+user.idnv+"'";
+            let sqlupdate = "Update [His_xml].[dbo].[tbnhanvien] set duyet='DONE' where idnv='"+user.idnv+"'";
             sqlupdate+=";select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by ngaytao" ;   
             await sql.connect(sqlConfig);   
             let result= await sql.query(sqlupdate);  
@@ -177,7 +177,7 @@ const getYlbacsiService = async (bacsi) => {
                // console.log('Connected to PostgreSQL database');
             });             
           //  let strPlSql="select servicedataid , TO_CHAR(servicedatausedate,'HH24:MI') ngayyl,patientrecordid  from tb_servicedata ts where servicedatausedate>='" + datetime.toISOString().slice(0,10) + " 11:20' limit  50";  
-           let strPlSql="select * from hisweb_getylenh('"+bsArray+"','abc')";  
+           let strPlSql="select * from hisweb_getylenh('"+bsArray+"','abc')";             
            let strPlSqlbs="select * from tb_nhanvien where nhanviencode_byt='"+bsArray+"' limit 1";  
            //console.log(strPlSql);
            let result= await client.query(strPlSql);   
@@ -204,7 +204,8 @@ const getYlbacsiService = async (bacsi) => {
                             patientrecordid:item.patientrecordid,
                             dichvu:item.dichvu,
                             nguoiyl: item.nguoiyl,
-                            ngayyl: item.ngayth
+                            ngayyl: item.ngayth,
+                            nyl: item.nth
                         };                   
                         arrayYL.push(arr);  
                     }
@@ -216,7 +217,8 @@ const getYlbacsiService = async (bacsi) => {
                             patientrecordid:item.patientrecordid,
                             dichvu:item.dichvu,
                             nguoiyl: item.nguoiyl,
-                            ngayyl: item.ngayyl
+                            ngayyl: item.ngayyl,
+                            nyl: item.nyl,
                         };
                         arrayYL.push(arr);
                     }
@@ -231,7 +233,8 @@ const getYlbacsiService = async (bacsi) => {
                                 patientrecordid:item.patientrecordid,
                                 dichvu:item.dichvu,
                                 nguoiyl: item.nguoith,
-                                ngayyl: item.ngayth
+                                ngayyl: item.ngayth,
+                                nyl:item.nth
                             };                   
                             arrayTH.push(arr);
                         }
@@ -244,7 +247,8 @@ const getYlbacsiService = async (bacsi) => {
                             patientrecordid:item.patientrecordid,
                             dichvu:item.dichvu,
                             nguoiyl: item.nguoith,
-                            ngayyl: item.ngayth
+                            ngayyl: item.ngayth,
+                            nyl: item.nth
                         };                   
                         arrayTH.push(arr);
                     }                    
@@ -257,7 +261,8 @@ const getYlbacsiService = async (bacsi) => {
                             patientrecordid:item.patientrecordid,
                             dichvu:item.dichvu,
                             nguoiyl: item.nguoikq,
-                            ngayyl: item.ngaykq
+                            ngayyl: item.ngaykq,
+                            nyl: item.nkq
                         };          
                         arrayKQ.push(arr);
                     }
@@ -270,10 +275,10 @@ const getYlbacsiService = async (bacsi) => {
             client.end()
             .then(() => {
                 //console.log('Connection to PostgreSQL closed');
-            })    
-            arrayYL.sort((date1, date2) => date1 - date2); 
-            arrayTH.sort((date1, date2) => date1 - date2);       
-            arrayKQ.sort((date1, date2) => date1 - date2);                   
+            })               
+            arrayYL.sort((a, b) => a.nyl - b.nyl); 
+            arrayTH.sort((a, b) => a.nyl - b.nyl);       
+            arrayKQ.sort((a, b) => a.nyl - b.nyl);                   
             return {
                 listphanquyen:rowbs[0].listphanquyen,
                 listphongchucnang:rowbs[0].listphongchucnang,
@@ -401,7 +406,13 @@ const postYcBydateService = async (datebc,option) => {
             +"where CONVERT(VARCHAR(10), ngayduyet, 120)='"+datebc+"' and  CONVERT(VARCHAR(10), ngayrv, 120)!='"+datebc+"' order by ngayduyet desc";      
             let resultYc= await sql.query(sqlServer); 
             return resultYc.recordset
-        }else{
+        }else if(option==3){
+            sqlServer ="select *,FORMAT(ngayyc, 'dd/MM/yyyy HH:mm') as nyc,FORMAT(ngayduyet, 'dd/MM/yyyy HH:mm') as nduyet,FORMAT(ngayrv, 'dd/MM/yyyy HH:mm') as nrv from [His_xml].[dbo].[yeucau] "
+            +"where CONVERT(VARCHAR(10), ngayduyet, 120)='"+datebc+"' order by ngayduyet desc";      
+            let resultYc= await sql.query(sqlServer); 
+            return resultYc.recordset
+        }
+        else{
             sqlServer = "select SUBSTRING(tenbn,0,CHARINDEX('-' ,tenbn)) as SttRec,tenbn,yeucau,FORMAT(ngayyc, 'dd/MM/yyyy HH:mm') as nyc,FORMAT(ngayduyet, 'dd/MM/yyyy HH:mm') as nduyet,FORMAT(ngayrv, 'dd/MM/yyyy HH:mm') as nrv FROM [His_xml].[dbo].[yeucau]  where YEAR(ngayrv)=1900";
             let rkq= await sql.query(sqlServer); 
             let npid = "(";
