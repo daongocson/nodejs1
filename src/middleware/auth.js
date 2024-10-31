@@ -1,9 +1,16 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const { saveAtion } = require("../services/userService");
-const Luulog= async (mail, name,ipclient)=>{
-    if(!mail.includes("thaolv"))
-        saveAtion(mail,ipclient);
+const Luulog= async (mail, name,ipclient,api)=>{
+    if(!mail.includes("thaolv")){
+        if(ipclient.length>145)
+            ipclient=ipclient.substring(0,145);
+        if(api.includes("postycsua"))
+            saveAtion(mail,ipclient,1);
+        else
+            saveAtion(mail,ipclient,2);
+    }
+       
 }
 const auth = (req, res, next) => {
 
@@ -25,7 +32,7 @@ const auth = (req, res, next) => {
                       }                   
                     if(decoded.ipclient){
                         if(!decoded.ipclient.includes("localhost"))
-                            Luulog(decoded.email,decoded.name,req.originalUrl+strbody+","+decoded.ipclient);
+                            Luulog(decoded.email,decoded.name,req.originalUrl+strbody+","+decoded.ipclient,req.originalUrl);
                     }
                         
                 }catch(e){};

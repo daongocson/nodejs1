@@ -54,8 +54,8 @@ const postmaquyen = async (req, res) => {
     const data = await postmaquyenService(mqdata);
     return res.status(200).json(data)
 }
-const guiYeucau = async (req, res) => {   
-    const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;      
+const guiYeucau = async (req, res) => {      
+    const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;          
     const data = await postYeucauService(tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv);
     return res.status(200).json(data)
 }

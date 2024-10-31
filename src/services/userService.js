@@ -100,7 +100,7 @@ const postcreatenickbsService = async (bsData) => {
 const postuserduyetService = async (user) => {       
     try {    
         if(user.action=="view"){
-            let sqlServer= "select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by ngaytao" ;      
+            let sqlServer= "select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by duyet,ngaytao" ;      
             await sql.connect(sqlConfig);   
             let result= await sql.query(sqlServer);   
             return result.recordset;
@@ -117,7 +117,7 @@ const postuserduyetService = async (user) => {
             client.end(); 
             // update chức năng duyệt
             let sqlupdate = "Update [His_xml].[dbo].[tbnhanvien] set duyet='DONE' where idnv='"+user.idnv+"'";
-            sqlupdate+=";select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by ngaytao" ;   
+            sqlupdate+=";select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by duyet,ngaytao" ;   
             await sql.connect(sqlConfig);   
             let result= await sql.query(sqlupdate);  
             result.duyet = "Tạo nick ("+user.nhanviencode+") Trên EHC thành công, mời đăng nhập hệ thống"
@@ -136,7 +136,7 @@ const postuserduyetService = async (user) => {
         }
         else if(user.action.toLowerCase()=="delete40576"){               
             let sqlServer= "delete from [His_xml].[dbo].[tbnhanvien] where idnv='"+user.idnv+"'" ;      
-            sqlServer+=";select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by ngaytao" ;                    
+            sqlServer+=";select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by duyet,ngaytao" ;                    
             await sql.connect(sqlConfig);   
             let result= await sql.query(sqlServer);  
             sql.close(); 
@@ -442,10 +442,10 @@ const postYcBydateService = async (datebc,option) => {
         return {message:"thất bại",duyet:datebc};
     }
 }
-const saveAtion = async (id_act,content) => {
+const saveAtion = async (id_act,content,notiStatus) => {
     try {       
         await sql.connect(sqlConfig);  
-        let sqlLog = "INSERT INTO [weblog] (idaction, content,ngaylog)VALUES ('"+id_act+"',N'"+content+"',GETDATE());"       
+        let sqlLog = "INSERT INTO [weblog] (idaction, content,pushStatus,ngaylog)VALUES ('"+id_act+"',N'"+content+"','"+notiStatus+"',GETDATE());"       
         await sql.query(sqlLog);            
     } catch (error) {
         console.log(error);
