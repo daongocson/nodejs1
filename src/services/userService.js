@@ -100,7 +100,7 @@ const postcreatenickbsService = async (bsData) => {
 const postuserduyetService = async (user) => {       
     try {    
         if(user.action=="view"){
-            let sqlServer= "select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by duyet,ngaytao" ;      
+            let sqlServer= "select *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by duyet,ngaytao desc" ;      
             await sql.connect(sqlConfig);   
             let result= await sql.query(sqlServer);   
             return result.recordset;
@@ -136,7 +136,7 @@ const postuserduyetService = async (user) => {
         }
         else if(user.action.toLowerCase()=="delete40576"){               
             let sqlServer= "delete from [His_xml].[dbo].[tbnhanvien] where idnv='"+user.idnv+"'" ;      
-            sqlServer+=";select top 10 *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by duyet,ngaytao" ;                    
+            sqlServer+=";select *,FORMAT(ngaytao, 'dd/MM/yyyy HH:mm') as ntao from [His_xml].[dbo].[tbnhanvien] order by duyet,ngaytao desc" ;                    
             await sql.connect(sqlConfig);   
             let result= await sql.query(sqlServer);  
             sql.close(); 

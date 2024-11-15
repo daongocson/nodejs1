@@ -1,13 +1,44 @@
 const express = require('express');
+const sql = require('mssql');
 const { createUser, handleLogin, getUser,  getAccount,getLsError, getLsDoctors, getYlbacsi, getPatient, getLsPhongkham, getLskhambenh, getLsCskh, getLschamcong, getChamcongId, guiYeucau, getLsycsua, guiDuyetyeucau, deleteYeucau, postYcBydate, postFilldoctor, postcreatenickbs, postuserduyet, postmaquyen, fetchycbydate } = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delay = require('../middleware/delay');
 const routerAPI = express.Router();
-
+const { Client } = require('pg');
 routerAPI.all("*", auth);
-
-routerAPI.get("/", (req, res) => {
-    return res.status(200).json("Hello world api")
+const dbConfig = {
+    user: 'postgres',
+    password: 'bvma@ehc.vn',
+    host: '113.160.170.53',
+    port: '2121',
+    database: 'bvminhan',
+    };
+    const sqlConfig = {
+        user: 'sa',
+        password: '123@lrco',
+        server: '113.160.170.53', // You can use 'localhost\\instance' to connect to named instance
+        database: 'His_xml',
+        options: {
+            encrypt: false, // Disable SSL/TLS
+          },   
+    }
+routerAPI.get("/", async(req, res) => {
+   // return res.status(200).json("Hello world api")
+   try {
+      // const client = new Client(dbConfig); 
+      // await client.connect();
+      let sqlServer = "select * from [His_xml].[dbo].[yeucau]";
+      await sql.connect(sqlConfig);    
+      let result= await sql.query(sqlServer);    
+      var rows = result.recordset;     
+      // let strPlSqlbs = "select nhanvienname  from tb_nhanvien tn where nhanviencode ='bshieu-bshai'";      
+      // let resultBs= await client.query(strPlSqlbs);        
+        console.log(">>>","resultBs.rows[0].nhanvienname",rows);
+       return res.status(200).json("Hello world sql Con111net Database"+rows[0].tenbn);
+    } catch (error) {
+        return res.status(200).json(">> Erro11r connect to DB");
+    //console.log(">>> Error connect to DB: ", error)
+    }
 })
 
 routerAPI.post("/register", createUser);

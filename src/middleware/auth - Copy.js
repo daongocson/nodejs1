@@ -17,10 +17,8 @@ const auth = (req, res, next) => {
     const white_lists = ["/", "/register", "/login"];
     if (white_lists.find(item => '/v1/api' + item === req.originalUrl)) {
         next();
-    } else if(req?.headers["zalo-access-token"]){
-        next();
-    }
-    else {
+    } else {
+        console.log("comto auto>>");
         if (req?.headers?.authorization?.split(' ')?.[1]) {
             const token = req.headers.authorization.split(' ')[1];
 
