@@ -543,6 +543,9 @@ const getLsChamcongIdService = async (manv) => {
     }
 }
 const getPatientService = async (mavp) => {
+       if(Number.isNaN(mavp)){
+            return;
+       }
        try {
             var datetime = new Date();   
             const client = new Client(dbConfig); 
