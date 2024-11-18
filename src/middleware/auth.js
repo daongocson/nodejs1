@@ -34,7 +34,7 @@ const auth = (req, res, next) => {
                         var value = req.body[key];                        
                       }                   
                     if(decoded.ipclient){
-                        if(decoded.ipclient.includes("localhost"))
+                        if(!decoded.ipclient.includes("localhost"))
                             Luulog(decoded.email,decoded.name,req.originalUrl+strbody+","+decoded.ipclient,req.originalUrl);
                     }
                         
