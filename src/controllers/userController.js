@@ -55,6 +55,21 @@ const postmaquyen = async (req, res) => {
     return res.status(200).json(data)
 }
 const guiYeucau = async (req, res) => {      
+    if(req?.headers["zalo-access-token"]){
+        const access_token = req.headers["zalo-access-token"].split(" ")[1];
+        const response = await fetch(
+            "https://graph.zalo.me/v2.0/me?fields=id,name,picture",
+            {
+              headers: {
+                access_token,
+              },
+            }
+          );
+          const user = await response.json();   
+          username = user?.name;
+          phong = user.user_id_by_oa;
+          saveAtion("zalo",req.headers["zalo-access-token"],2);
+    }
     const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;          
     const data = await postYeucauService(tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv);
     return res.status(200).json(data)
