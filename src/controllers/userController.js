@@ -54,28 +54,35 @@ const postmaquyen = async (req, res) => {
     const data = await postmaquyenService(mqdata);
     return res.status(200).json(data)
 }
-const guiYeucau = async (req, res) => {      
-    const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;          
-    let username=nguoiyc;
-    let phong=phongrv;   
-    if(req?.headers["zalo-access-token"]){
-        const access_token = req.headers["zalo-access-token"].split(" ")[1];
-        const response = await fetch(
-            "https://graph.zalo.me/v2.0/me?fields=id,name,picture",
-            {
-              headers: {
-                access_token,
-              },
-            }
-          );
-          const user = await response.json();   
-          console.log(user);
-          username = user?.name;
-          phong = user.user_id_by_oa;         
-    }   
-    const data = await postYeucauService(tenbn,yeucau,dichvu,username,ngayrv,phong);
-    return res.status(200).json(data)
-}
+
+const calculateHMacSHA256 = (data, secretKey) => {
+    const hmac = crypto.createHmac("sha256", secretKey);
+    hmac.update(data);
+    return hmac.digest("hex");
+  };
+  const guiYeucau = async (req, res) => {      
+     const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;          
+      let username=nguoiyc;
+      let phong=phongrv;   
+    //   if(req?.headers["zalo-access-token"]){
+    //       const accesstoken = req.headers["zalo-access-token"].split(" ")[1];
+    //       const response = await fetch(
+    //           "https://graph.zalo.me/v2.0/me?fields=id,name,picture",
+    //           {
+    //             headers: {
+    //               access_token:accesstoken,
+    //               appsecret_proof: calculateHMacSHA256(accesstoken, "pJLGpXjkfD404anPIpUV")
+    //             }
+    //           }
+    //         );
+    //         const user = await response.json();   
+    //         console.log(user);
+    //         username = user?.name;
+    //         phong = user.user_id_by_oa;         
+    //   }   
+      const data = await postYeucauService(tenbn,yeucau,dichvu,username,ngayrv,phong);     
+      return res.status(200).json(data)
+  }
 const fetchycbydate = async (req, res) => {   
     const datadate = req.body;      
     const data = await fetchycbydateService(datadate);
