@@ -69,9 +69,9 @@ const guiYeucau = async (req, res) => {
             }
           );
           const user = await response.json();   
+          console.log(user);
           username = user?.name;
-          phong = user.user_id_by_oa;
-          saveAtion("zalo",req.headers["zalo-access-token"],2);
+          phong = user.user_id_by_oa;         
     }   
     const data = await postYeucauService(tenbn,yeucau,dichvu,username,ngayrv,phong);
     return res.status(200).json(data)
