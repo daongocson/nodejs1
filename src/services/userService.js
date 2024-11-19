@@ -294,28 +294,11 @@ const getYlbacsiService = async (bacsi) => {
         }
 }
 const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv) => {
-    let username=nguoiyc;
-    let phong=phongrv;
-    if(req?.headers["zalo-access-token"]){
-        const access_token = req.headers["zalo-access-token"].split(" ")[1];
-        const response = await fetch(
-            "https://graph.zalo.me/v2.0/me?fields=id,name,picture",
-            {
-              headers: {
-                access_token,
-              },
-            }
-          );
-          const user = await response.json();   
-          username = user?.name;
-          phong = user.user_id_by_oa;
-          saveAtion("zalo",req.headers["zalo-access-token"],2);
-    }
     try {
         let mavp=tenbn.split("-")[0];
         if(ngayrv.includes("0001"))
             ngayrv="";
-        let sqlServer = "INSERT INTO yeucau (phongrv,ngayrv,trangthaihs,phongth,tenbn, yeucau, dichvu,nguoiyc,ngayyc)VALUES (N'"+phong+"','"+ngayrv+"',0,'KHTH',N'"+tenbn+"',N'"+yeucau+"',N'"+dichvu+"',N'"+username+"',GETDATE());"
+        let sqlServer = "INSERT INTO yeucau (phongrv,ngayrv,trangthaihs,phongth,tenbn, yeucau, dichvu,nguoiyc,ngayyc)VALUES (N'"+phongrv+"','"+ngayrv+"',0,'KHTH',N'"+tenbn+"',N'"+yeucau+"',N'"+dichvu+"',N'"+nguoiyc+"',GETDATE());"
         sqlServer +=";select *,CONVERT(VARCHAR(10), ngayyc, 120) as nyc from [His_xml].[dbo].[yeucau] where tenbn like'"+mavp+"-%'";  
         try {  
             await sql.connect(sqlConfig);   
