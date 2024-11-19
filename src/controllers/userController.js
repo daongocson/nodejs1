@@ -55,6 +55,7 @@ const postmaquyen = async (req, res) => {
     return res.status(200).json(data)
 }
 const guiYeucau = async (req, res) => {      
+    const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;          
     let username=nguoiyc;
     let phong=phongrv;   
     if(req?.headers["zalo-access-token"]){
@@ -71,8 +72,7 @@ const guiYeucau = async (req, res) => {
           username = user?.name;
           phong = user.user_id_by_oa;
           saveAtion("zalo",req.headers["zalo-access-token"],2);
-    }
-    const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;          
+    }   
     const data = await postYeucauService(tenbn,yeucau,dichvu,username,ngayrv,phong);
     return res.status(200).json(data)
 }
