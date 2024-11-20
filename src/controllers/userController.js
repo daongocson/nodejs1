@@ -1,4 +1,6 @@
 const { createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService } = require("../services/userService");
+
+const crypto = require("crypto"); //  'crypto';
 const logAction = async (id_act,content) => {   
     var os = require("os");    var hostname = os.hostname();      
   
@@ -61,7 +63,8 @@ const calculateHMacSHA256 = (data, secretKey) => {
     return hmac.digest("hex");
   };
   const guiYeucau = async (req, res) => {      
-     const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;          
+     const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;   
+     console.log("phong>>>>>",phongrv);       
       let username=nguoiyc;
       let phong=phongrv;   
     //   if(req?.headers["zalo-access-token"]){
@@ -71,7 +74,7 @@ const calculateHMacSHA256 = (data, secretKey) => {
     //           {
     //             headers: {
     //               access_token:accesstoken,
-    //               appsecret_proof: calculateHMacSHA256(accesstoken, "pJLGpXjkfD404anPIpUV")
+    //             //   appsecret_proof: calculateHMacSHA256(accesstoken, "pJLGpXjkfD404anPIpUV")
     //             }
     //           }
     //         );
