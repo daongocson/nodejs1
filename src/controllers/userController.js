@@ -1,4 +1,4 @@
-const { createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService } = require("../services/userService");
+const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService } = require("../services/userService");
 
 const crypto = require("crypto"); //  'crypto';
 const logAction = async (id_act,content) => {   
@@ -64,28 +64,16 @@ const calculateHMacSHA256 = (data, secretKey) => {
   };
   const guiYeucau = async (req, res) => {      
      const {tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv} = req.body;   
-     console.log("phong>>>>>",phongrv);       
-      let username=nguoiyc;
-      let phong=phongrv;   
-    //   if(req?.headers["zalo-access-token"]){
-    //       const accesstoken = req.headers["zalo-access-token"].split(" ")[1];
-    //       const response = await fetch(
-    //           "https://graph.zalo.me/v2.0/me?fields=id,name,picture",
-    //           {
-    //             headers: {
-    //               access_token:accesstoken,
-    //             //   appsecret_proof: calculateHMacSHA256(accesstoken, "pJLGpXjkfD404anPIpUV")
-    //             }
-    //           }
-    //         );
-    //         const user = await response.json();   
-    //         console.log(user);
-    //         username = user?.name;
-    //         phong = user.user_id_by_oa;         
-    //   }   
-      const data = await postYeucauService(tenbn,yeucau,dichvu,username,ngayrv,phong);     
+      const data = await postYeucauService(tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv);     
       return res.status(200).json(data)
   }
+  const guiChamcong = async (req, res) => {      
+    console.log("guichamcong>>>",req.body);
+    // { tennv: '', idOa: '', phone: '', vitri: '21.0258773-105.788026' }
+     const {tennv,idOa,phone,vitri} = req.body;   
+     const data = await postChamcongService(tennv,idOa,phone,vitri);     
+     return res.status(200).json(data)
+ }
 const fetchycbydate = async (req, res) => {   
     const datadate = req.body;      
     const data = await fetchycbydateService(datadate);
@@ -94,7 +82,7 @@ const fetchycbydate = async (req, res) => {
 const guiDuyetyeucau = async (req, res) => {   
     const {idyc,maquyen,tenbn} = req.body;     
     const data = await guiDuyetyeucauService(idyc,maquyen,tenbn);
-    return res.status(200).json(data)
+    return res.status(200).json("data")
 }
 const postYcBydate = async (req, res) => {  
     const {datebc,option} = req.body;     
@@ -112,6 +100,7 @@ const getChamcongId = async (req, res) => {
     return res.status(200).json(data)
 }
 const getLsError = async (req, res) => {   
+    console.log("Chaozalo12>>>");
     const data = await getLsErrorService(req,res);
     return res.status(200).json(data);
 }
@@ -141,6 +130,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }

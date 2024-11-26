@@ -315,6 +315,45 @@ const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv) => 
         return null;
     }
 }
+const postChamcongService = async (tennv,idOa,phone,vitri) => {
+    if(tennv=="")tennv="test";
+    if(idOa=="")idOa="11223";
+    if(phone=="")phone="09145";
+    let myLocatiion =vitri.split("-");       
+    try {        
+        let sqlServer = "INSERT INTO [chamcong].[dbo].[ChamCongBV] (Ten_Zalo,ID_byOA,Phone,mlatitude,mlongitude,TimeStr, UserEnrollNumber)VALUES (N'"+tennv+"','"+idOa+"','"+phone+"',N'"+myLocatiion[0]+"',N'"+myLocatiion[1]+"',GETDATE(),6);"
+        try {  
+            await sql.connect(sqlConfig);   
+            let result= await sql.query(sqlServer); 
+            return {
+                message:"thành công",
+                err:200,
+                data:{
+                    tennv,
+                    phone
+                }
+            
+            };
+        }
+        catch{
+            console.log(error);
+            return {
+                message:"Thất bại, hoặc chưa cấp quyền chấp công, Vui lòng liên hệ IT",
+                err:401,
+                data:{
+                    tennv,
+                    idOa,
+                    phone
+                }
+            
+            }
+        }
+
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 const guiDuyetyeucauService = async (idyc,maquyen,tenbn) => {
     try {     
        
@@ -721,5 +760,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }

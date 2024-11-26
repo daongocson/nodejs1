@@ -1,6 +1,6 @@
 const express = require('express');
 const sql = require('mssql');
-const { createUser, handleLogin, getUser,  getAccount,getLsError, getLsDoctors, getYlbacsi, getPatient, getLsPhongkham, getLskhambenh, getLsCskh, getLschamcong, getChamcongId, guiYeucau, getLsycsua, guiDuyetyeucau, deleteYeucau, postYcBydate, postFilldoctor, postcreatenickbs, postuserduyet, postmaquyen, fetchycbydate } = require('../controllers/userController');
+const { guiChamcong,createUser, handleLogin, getUser,  getAccount,getLsError, getLsDoctors, getYlbacsi, getPatient, getLsPhongkham, getLskhambenh, getLsCskh, getLschamcong, getChamcongId, guiYeucau, getLsycsua, guiDuyetyeucau, deleteYeucau, postYcBydate, postFilldoctor, postcreatenickbs, postuserduyet, postmaquyen, fetchycbydate } = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delay = require('../middleware/delay');
 const routerAPI = express.Router();
@@ -49,6 +49,7 @@ routerAPI.post("/postPhongkham", getLskhambenh);
 routerAPI.post("/postchamcongid", getChamcongId);
 routerAPI.post("/postycsua", guiYeucau);
 routerAPI.post("/postduyetyc", guiDuyetyeucau);
+routerAPI.post("/postchamcong", guiChamcong);
 routerAPI.post("/deleteYeucau", deleteYeucau);
 routerAPI.post("/postycbydate", postYcBydate);
 routerAPI.post("/postfilldoctor", postFilldoctor);

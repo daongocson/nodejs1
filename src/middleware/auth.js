@@ -13,16 +13,16 @@ const Luulog= async (mail, name,ipclient,api)=>{
        
 }
 const auth = (req, res, next) => {
-
     const white_lists = ["/", "/register", "/login"];
     if (white_lists.find(item => '/v1/api' + item === req.originalUrl)) {
         next();
     } else if(req?.headers["zalo-access-token"]){
         //if trong ds thì next 
         if (req?.headers?.authorization?.split(' ')?.[1]){
-            console.log("logzalo>>>",req?.headers?.authorization);
+            console.log("logzalobody>>>",req.body);
         }
         next();
+        // return res.status(200).json("")
     }
     else {
         if (req?.headers?.authorization?.split(' ')?.[1]) {
