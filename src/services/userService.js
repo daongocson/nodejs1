@@ -326,7 +326,7 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
             await sql.connect(sqlConfig);   
             let result= await sql.query(sqlServer); 
             return {
-                message:"thành công",
+                message:"Bạn đã hoàn thành chấm công",
                 err:200,
                 data:{
                     tennv,
@@ -338,7 +338,7 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
         catch{
             console.log(error);
             return {
-                message:"Thất bại, hoặc chưa cấp quyền chấp công, Vui lòng liên hệ IT",
+                message:"Thất bại, hoặc chưa cấp quyền chấm công, Vui lòng liên hệ IT",
                 err:401,
                 data:{
                     tennv,
