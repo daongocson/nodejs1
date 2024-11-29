@@ -322,24 +322,60 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
     let myLocatiion =vitri.split("-");       
     try {        
         let sqlServer = "INSERT INTO [chamcong].[dbo].[ChamCongBV] (Ten_Zalo,ID_byOA,Phone,mlatitude,mlongitude,TimeStr, UserEnrollNumber)VALUES (N'"+tennv+"','"+idOa+"','"+phone+"',N'"+myLocatiion[0]+"',N'"+myLocatiion[1]+"',GETDATE(),6);"
+        let sqlSeachPhone = "select * FROM [chamcong].[dbo].[ChamCong_Map] where Phone='"+phone+"'";
+      // insert tọa độ vào database
         try {  
             await sql.connect(sqlConfig);   
-            let result= await sql.query(sqlServer); 
-            return {
-                message:"Bạn đã hoàn thành chấm công",
-                err:200,
-                data:{
-                    tennv,
-                    phone
+            await sql.query(sqlServer);            
+            let result= await sql.query(sqlSeachPhone);              
+            var numlatitue = parseFloat(myLocatiion[0]);
+            var numlongtatitue = parseFloat(myLocatiion[1]);
+            // xác định nhân viên chưa map
+            var rows = result.recordset;
+            if(rows.length<1){
+                return {
+                    message:"Số điện thoại:"+phone+" của bạn chưa có trong danh bạ bệnh viện/ Liên hệ IT để thêm",
+                    err:"401",
+                    data:{
+                        tennv,
+                        idOa,
+                        phone
+                    }
+                
                 }
+            }        
+            //xác định tọa độ ngoại viện
+            if((19.1245667< numlatitue) && (numlatitue< 19.1256980) &&(numlongtatitue>105.610213)&&(numlongtatitue<105.6113813)){
+                return {
+                    message:"Hiện tại chấm công trên mobile chưa áp dụng dữ liệu thật, chấm công sẽ được thực hiện vào đầu tháng tới^-^ ,"+"Cảm ơn "+tennv+" hoàn thành chấm công thành công thời gian: "+(new Date()).toLocaleString(),
+                    err:"200",
+                    data:{
+                        tennv,
+                        phone
+                    }
+                
+                };
+
+            }else{
+                return {
+                    message:"Tọa độ chấm công ngoại viện/ Liên hệ IT để thêm tọa độ vào danh bạ tọa độ",
+                    err:"401",
+                    data:{
+                        tennv,
+                        idOa,
+                        phone
+                    }
+                
+                }
+            }
             
-            };
+          
         }
-        catch{
-            console.log(error);
+        catch(error){
+            console.log("Lỗi:"+error.message);
             return {
-                message:"Thất bại, hoặc chưa cấp quyền chấm công, Vui lòng liên hệ IT",
-                err:401,
+                message:"Lỗi:"+error.message,
+                err:"401",
                 data:{
                     tennv,
                     idOa,

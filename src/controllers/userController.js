@@ -68,11 +68,10 @@ const calculateHMacSHA256 = (data, secretKey) => {
       return res.status(200).json(data)
   }
   const guiChamcong = async (req, res) => {      
-    console.log("guichamcong>>>",req.body);
     // { tennv: '', idOa: '', phone: '', vitri: '21.0258773-105.788026' }
      const {tennv,idOa,phone,vitri} = req.body;   
      const data = await postChamcongService(tennv,idOa,phone,vitri);     
-     return res.status(200).json(data)
+     return res.status(200).json(data);
  }
 const fetchycbydate = async (req, res) => {   
     const datadate = req.body;      
@@ -82,7 +81,7 @@ const fetchycbydate = async (req, res) => {
 const guiDuyetyeucau = async (req, res) => {   
     const {idyc,maquyen,tenbn} = req.body;     
     const data = await guiDuyetyeucauService(idyc,maquyen,tenbn);
-    return res.status(200).json("data")
+    return res.status(200).json(data)
 }
 const postYcBydate = async (req, res) => {  
     const {datebc,option} = req.body;     
