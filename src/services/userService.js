@@ -316,15 +316,14 @@ const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv) => 
     }
 }
 const postChamcongService = async (tennv,idOa,phone,vitri) => {
-    if(tennv=="")tennv="test";
-    if(idOa=="")idOa="11223";
-    if(phone=="")phone="09145";
-    let myLocatiion =vitri.split("-");       
+    if(tennv=="")tennv="MrSon";
+    if(idOa=="")idOa="1478138938953374770";
+    if(phone=="")phone="84914069888";       
     try {        
+        let myLocatiion =vitri.split("-");   
         let sqlServer = "INSERT INTO [chamcong].[dbo].[ChamCongBV] (Ten_Zalo,ID_byOA,Phone,mlatitude,mlongitude,TimeStr, UserEnrollNumber)VALUES (N'"+tennv+"','"+idOa+"','"+phone+"',N'"+myLocatiion[0]+"',N'"+myLocatiion[1]+"',GETDATE(),6);"
         let sqlSeachPhone = "select * FROM [chamcong].[dbo].[ChamCong_Map] where Phone='"+phone+"'";
-      // insert tọa độ vào database
-        try {  
+     
             await sql.connect(sqlConfig);   
             await sql.query(sqlServer);            
             let result= await sql.query(sqlSeachPhone);              
@@ -343,31 +342,36 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
                     }
                 
                 }
-            }        
-            //xác định tọa độ ngoại viện
-            if((19.1245667< numlatitue) && (numlatitue< 19.1256980) &&(numlongtatitue>105.610213)&&(numlongtatitue<105.6113813)){
-                return {
-                    message:"Hiện tại chấm công trên mobile chưa áp dụng dữ liệu thật, chấm công sẽ được thực hiện vào đầu tháng tới^-^ ,"+"Cảm ơn "+tennv+" hoàn thành chấm công thành công thời gian: "+(new Date()).toLocaleString(),
-                    err:"200",
-                    data:{
-                        tennv,
-                        phone
-                    }
-                
-                };
+            }else{     
+                //xác định tọa độ ngoại viện
+                if((19.1245667< numlatitue) && (numlatitue< 19.1256980) &&(numlongtatitue>105.610213)&&(numlongtatitue<105.6113813)){
+                    let query_CallProIns = "exec InSertProChamcong @idOa='" + idOa +  "', @idUserenroll='" + rows[0].UserEnrollNumber + "', @smstext=N'Cảm ơn " + tennv +" Chấm công,Time=" +(new Date()).toLocaleString()+"';";
+                    //let query_CallProIns = "exec InSertProChamcong @idOa='" + idOa +  "', @idUserenroll='" + rows[0].UserEnrollNumber + "', @smstext=N'Cảm ơn " + tennv + " chấm công';";
+                    console.log("query_CallProIns>>>",query_CallProIns);
+                    await sql.query(query_CallProIns);    
+                    return {
+                        message:"Hiện tại chấm công trên mobile chưa áp dụng dữ liệu thật, chấm công sẽ được thực hiện vào đầu tháng tới^-^ ,"+"Cảm ơn "+tennv+" hoàn thành chấm công thành công thời gian: "+(new Date()).toLocaleString(),
+                        err:"200",
+                        data:{
+                            tennv,
+                            phone
+                        }
+                    
+                    };
 
-            }else{
-                return {
-                    message:"Tọa độ chấm công ngoại viện/ Liên hệ IT để thêm tọa độ vào danh bạ tọa độ",
-                    err:"401",
-                    data:{
-                        tennv,
-                        idOa,
-                        phone
+                }else{
+                    return {
+                        message:"Tọa độ chấm công ngoại viện/ Liên hệ IT để thêm tọa độ vào danh bạ tọa độ",
+                        err:"401",
+                        data:{
+                            tennv,
+                            idOa,
+                            phone
+                        }
+                    
                     }
-                
                 }
-            }
+            }                  
             
           
         }
@@ -380,15 +384,10 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
                     tennv,
                     idOa,
                     phone
-                }
-            
             }
+            
         }
-
-    } catch (error) {
-        console.log(error);
-        return null;
-    }
+    }    
 }
 const guiDuyetyeucauService = async (idyc,maquyen,tenbn) => {
     try {     
@@ -520,8 +519,11 @@ const postYcBydateService = async (datebc,option) => {
 const saveAtion = async (id_act,content,notiStatus) => {
     try {       
         await sql.connect(sqlConfig);  
-        let sqlLog = "INSERT INTO [weblog] (idaction, content,pushStatus,ngaylog)VALUES ('"+id_act+"',N'"+content+"','"+notiStatus+"',GETDATE());"       
-        await sql.query(sqlLog);            
+        let sqlLog = "INSERT INTO [weblog] (idaction, content,pushStatus,ngaylog)VALUES ('"+id_act+"',N'"+content+"','"+notiStatus+"',GETDATE());"    
+        let sqlNotification="INSERT INTO [His_xml].[dbo].[tbzalosms]  (sms,idoa,[iduserenroll],[timeIn],[status]) values ( FORMAT(GETDATE() , 'dd/MM/yyyy HH:mm:ss')+N' Có yêu cầu mới: his.id.vn/ycsuahs',1478138938953374770,6,getdate(),1)"
+                +",FORMAT(GETDATE() , 'dd/MM/yyyy HH:mm:ss')+N' Có yêu cầu mới: his.id.vn/ycsuahs',4051088051399232393,98,getdate(),1)"   ;
+        await sql.query(sqlLog);    
+        await sql.query(sqlNotification);          
     } catch (error) {
         console.log(error);
         return null;
@@ -696,6 +698,78 @@ const getPatientService = async (mavp) => {
             return null;
         }
 }
+const getKqclsByidService = async (mavp) => {
+    let idmavp=atob(mavp);  
+    if(Number.isNaN(idmavp)){
+         return;
+    }  
+    try {
+         var datetime = new Date();   
+         const client = new Client(dbConfig); 
+         await client.connect().then(() => {
+           //  console.log('Connected to PostgreSQL database');
+         });             
+     
+        let strPlSql="select servicedataid as id,treatmentid,data_value,servicename as name,TO_CHAR(servicedatausedate,'dd/MM HH24:MI') as tgYl,TO_CHAR(end_date,'dd/MM HH24:MI') as tgKq, dm_servicegroupid as manhom from tb_servicedata ts where soluong> 0 and dm_servicegroupid > 0 and dm_servicegroupid in(4) and patientrecordid ='"+idmavp+"'";  
+        let strPatientSql="select patientname, (select roomname from tb_room tr where tr.roomid  = tp.roomid_out) as roomname ,patientcode,dm_patientobjectid,TO_CHAR(receptiondate,'dd/MM/yyyy HH24:MI') as ngayvao,TO_CHAR(medicalrecorddate_out,'dd/MM/yyyy HH24:MI') as ngayra "
+        +",chandoan_out_main_icd10 ,chandoan_out_main,insurancecode,thonxom ||'-'||tdx.dm_xaname as diachi"+
+        " from tb_patientrecord tp,tb_dm_xa tdx where tdx.dm_xacode =tp.dm_xacode and patientrecordid ='"+idmavp+"'";             
+        // console.log(strPlSql);
+        let result= await client.query(strPlSql);        
+        let resultInfo= await client.query(strPatientSql);
+        //conect sql   
+        await sql.connect(sqlConfig);                    
+        var arrayInfo = [];      
+        var arrayDV = [];
+        var rows = result.rows;
+        var rowsInfo = resultInfo.rows;
+        rows.forEach(function(item) {  
+             if(item.manhom==1){                                                
+                 arrayKB.push(item);  
+             }                         
+             else if(item.manhom==7){
+                 arrayTH.push(item);  
+             }
+             else{
+                 arrayDV.push(item);  
+             }
+         });  
+         rowsInfo.forEach(function(item) {                 
+             arrayInfo.push({id:"1",name:"Tên khách hàng",value:item.patientname});
+             arrayInfo.push({id:"2",name:"Mã khách hàng",value:item.patientcode});
+             if(item.dm_patientobjectid==2)
+                 arrayInfo.push({id:"3",name:"Đối tượng",value:"Viện phí"});
+             else
+                 arrayInfo.push({id:"3",name:"Đối tượng",value:"Bảo hiểm"});               
+             if(item.chandoan_out_main_icd10)
+                 arrayInfo.push({id:"4",name:"ICD",value:item.chandoan_out_main_icd10});
+             if(item.chandoan_out_main)
+                 arrayInfo.push({id:"5",name:"Mã bệnh",value:item.chandoan_out_main});                
+             if(item.insurancecode)
+                 arrayInfo.push({id:"8",name:"Mã Thẻ",value:item.insurancecode});    
+           //  arrayInfo.push({id:"9",name:"Địa chỉ",value:item.diachi});               
+             arrayInfo.push({id:"6",name:"Ngày vào",value:item.ngayvao});
+             arrayInfo.push({id:"7",name:"Ngày ra viện",value:item.ngayra});  
+             arrayInfo.push({id:"10",name:"Phòng ra viện",value:item.roomname});  
+                           
+            
+         });              
+         client.end()
+         .then(() => {
+           //  console.log('Connection to PostgreSQL closed');
+         })            
+         arrayDV.sort((date1, date2) => date1 - date2);                   
+         return {
+             dataKH: arrayInfo,
+             dataDV: arrayDV
+            
+         };
+         //return result.rows;
+     } catch (error) {
+         console.log(error);
+         return null;
+     }
+}
 const loginService = async (email1, password,ipClient) => {
     try {
         //fetch user by email       
@@ -796,5 +870,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }

@@ -6,14 +6,14 @@ const Luulog= async (mail, name,ipclient,api)=>{
         if(ipclient.length>145)
             ipclient=ipclient.substring(0,145);
         if(api.includes("postycsua"))
-            saveAtion(mail,ipclient,1);
+            saveAtion(mail,ipclient,2);
         else
             saveAtion(mail,ipclient,2);
     }
        
 }
 const auth = (req, res, next) => {
-    const white_lists = ["/", "/register", "/login"];
+    const white_lists = ["/", "/register", "/login","/postkqcls"];
     if (white_lists.find(item => '/v1/api' + item === req.originalUrl)) {
         next();
     } else if(req?.headers["zalo-access-token"]){
