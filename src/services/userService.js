@@ -297,12 +297,17 @@ const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv) => 
     try {
         let mavp=tenbn.split("-")[0];
         if(ngayrv.includes("0001"))
-            ngayrv="";
+            ngayrv="";       
         let sqlServer = "INSERT INTO yeucau (phongrv,ngayrv,trangthaihs,phongth,tenbn, yeucau, dichvu,nguoiyc,ngayyc)VALUES (N'"+phongrv+"','"+ngayrv+"',0,'KHTH',N'"+tenbn+"',N'"+yeucau+"',N'"+dichvu+"',N'"+nguoiyc+"',GETDATE());"
         sqlServer +=";select *,CONVERT(VARCHAR(10), ngayyc, 120) as nyc from [His_xml].[dbo].[yeucau] where tenbn like'"+mavp+"-%'";  
         try {  
             await sql.connect(sqlConfig);   
+            let sqlNotification="INSERT INTO [His_xml].[dbo].[tbzalosms]  (sms,idoa,[iduserenroll],[timeIn],[status]) "
+            +"values ( FORMAT(GETDATE() , 'dd/MM/yyyy HH:mm:ss')+N' Có yêu cầu mới: https://his.id.vn/ycsuahs ',1478138938953374770,6,getdate(),1)"
+            +",(FORMAT(GETDATE() , 'dd/MM/yyyy HH:mm:ss')+N' Có yêu cầu mới: https://his.id.vn/ycsuahs ',4051088051399232393,98,getdate(),1)"   ;
+            await sql.query(sqlNotification);       
             let result= await sql.query(sqlServer); 
+            
             return result.recordset;
         }
         catch{
@@ -350,7 +355,7 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
                     console.log("query_CallProIns>>>",query_CallProIns);
                     await sql.query(query_CallProIns);    
                     return {
-                        message:"Hiện tại chấm công trên mobile chưa áp dụng dữ liệu thật, chấm công sẽ được thực hiện vào đầu tháng tới^-^ ,"+"Cảm ơn "+tennv+" hoàn thành chấm công thành công thời gian: "+(new Date()).toLocaleString(),
+                        message:"Cảm ơn "+tennv+" hoàn thành chấm công thành công thời gian: "+(new Date()).toLocaleString(),
                         err:"200",
                         data:{
                             tennv,
@@ -376,7 +381,15 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
           
         }
         catch(error){
-            console.log("Lỗi:"+error.message);
+            try{
+                console.log("Lỗi:"+error.message);
+                let sqlLogLoi = "INSERT INTO [weblog] (idaction, content,pushStatus,ngaylog)VALUES ('"+idOa+"',N'"+error.message+"','"+2+"',GETDATE());" ;
+                await sql.connect(sqlConfig);   
+                await sql.query(sqlLogLoi);      
+            }catch{
+                console.log("sql-Lỗi:"+error.message);
+            }
+            
             return {
                 message:"Lỗi:"+error.message,
                 err:"401",
@@ -385,6 +398,8 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
                     idOa,
                     phone
             }
+            
+            
             
         }
     }    
@@ -519,11 +534,8 @@ const postYcBydateService = async (datebc,option) => {
 const saveAtion = async (id_act,content,notiStatus) => {
     try {       
         await sql.connect(sqlConfig);  
-        let sqlLog = "INSERT INTO [weblog] (idaction, content,pushStatus,ngaylog)VALUES ('"+id_act+"',N'"+content+"','"+notiStatus+"',GETDATE());"    
-        let sqlNotification="INSERT INTO [His_xml].[dbo].[tbzalosms]  (sms,idoa,[iduserenroll],[timeIn],[status]) values ( FORMAT(GETDATE() , 'dd/MM/yyyy HH:mm:ss')+N' Có yêu cầu mới: his.id.vn/ycsuahs',1478138938953374770,6,getdate(),1)"
-                +",FORMAT(GETDATE() , 'dd/MM/yyyy HH:mm:ss')+N' Có yêu cầu mới: his.id.vn/ycsuahs',4051088051399232393,98,getdate(),1)"   ;
-        await sql.query(sqlLog);    
-        await sql.query(sqlNotification);          
+        let sqlLog = "INSERT INTO [weblog] (idaction, content,pushStatus,ngaylog)VALUES ('"+id_act+"',N'"+content+"','"+notiStatus+"',GETDATE());"         
+        await sql.query(sqlLog);             
     } catch (error) {
         console.log(error);
         return null;
