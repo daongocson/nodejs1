@@ -84,7 +84,22 @@ const fetchycbydate = async (req, res) => {
     return res.status(200).json(data)
 }
 const postPayment = async (req, res) => {   
-    console.log(">>>req_bank:",req);
+    // const{appId,orderId,method}=req.body.data;
+    const {data,mac} = req.body;
+    // data = 'appId='+appId+'&orderId='+orderId+'&method='+method;
+    reqmac = HMAC('HmacSHA256', privateKey, data);
+    console.log(">>>req_bank:",reqmac,mac);
+    if (reqmac == mac) {
+        
+      // request hợp lệ
+    } else {
+      // request không hợp lệ
+    }
+
+    
+
+    // https://payment-mini.zalo.me/api/transaction/{Mini-App-ID}/bank-callback-payment
+    // console.log(">>>req_bank:",req);
     return res.status(200).json("data")
 }
 const guiDuyetyeucau = async (req, res) => {   
