@@ -23,6 +23,7 @@ const dbConfig = {
           },   
     }
 routerAPI.get("/", async(req, res) => {
+     console.log(">>> LogError_routerAPI_Bank: ");
    // return res.status(200).json("Hello world api")
    try {
       // const client = new Client(dbConfig); 

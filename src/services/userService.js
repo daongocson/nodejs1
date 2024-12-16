@@ -303,8 +303,8 @@ const postYeucauService = async (tenbn,yeucau,dichvu,nguoiyc,ngayrv,phongrv) => 
         try {  
             await sql.connect(sqlConfig);   
             let sqlNotification="INSERT INTO [His_xml].[dbo].[tbzalosms]  (sms,idoa,[iduserenroll],[timeIn],[status]) "
-            +"values ( FORMAT(GETDATE() , 'dd/MM/yyyy HH:mm:ss')+N' Có yêu cầu mới: https://his.id.vn/ycsuahs ',1478138938953374770,6,getdate(),1)"
-            +",(FORMAT(GETDATE() , 'dd/MM/yyyy HH:mm:ss')+N' Có yêu cầu mới: https://his.id.vn/ycsuahs ',4051088051399232393,98,getdate(),1)"   ;
+            +"values ( FORMAT(GETDATE() , 'dd/MM/yyyy HH:mm:ss')+N' Có yêu cầu mới: his.id.vn/ycsuahs',1478138938953374770,6,getdate(),1)"
+            +",(FORMAT(GETDATE() , 'dd/MM/yyyy HH:mm:ss')+N' Có yêu cầu mới: his.id.vn/ycsuahs',4051088051399232393,98,getdate(),1)"   ;
             await sql.query(sqlNotification);       
             let result= await sql.query(sqlServer); 
             
@@ -349,7 +349,8 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
                 }
             }else{     
                 //xác định tọa độ ngoại viện
-                if((19.1245667< numlatitue) && (numlatitue< 19.1256980) &&(numlongtatitue>105.610213)&&(numlongtatitue<105.6113813)){
+                // if((19.1245667< numlatitue) && (numlatitue< 19.1256980) &&(numlongtatitue>105.610213)&&(numlongtatitue<105.6113813)){
+                if((19.1245007< numlatitue) && (numlatitue< 19.1257000) &&(numlongtatitue>105.610213)&&(numlongtatitue<105.6113813)){
                     let query_CallProIns = "exec InSertProChamcong @idOa='" + idOa +  "', @idUserenroll='" + rows[0].UserEnrollNumber + "', @smstext=N'Cảm ơn " + tennv +" Chấm công,Time=" +(new Date()).toLocaleString()+"';";
                     //let query_CallProIns = "exec InSertProChamcong @idOa='" + idOa +  "', @idUserenroll='" + rows[0].UserEnrollNumber + "', @smstext=N'Cảm ơn " + tennv + " chấm công';";
                     console.log("query_CallProIns>>>",query_CallProIns);
