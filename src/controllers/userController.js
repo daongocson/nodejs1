@@ -86,6 +86,7 @@ const fetchycbydate = async (req, res) => {
 const postPayment = async (req, res) => {   
     // const{appId,orderId,method}=req.body.data;
     const {data,mac} = req.body;
+    const privateKey ='pJLGpXjkfD404anPIpUV';
     // data = 'appId='+appId+'&orderId='+orderId+'&method='+method;
     reqmac = HMAC('HmacSHA256', privateKey, data);
     console.log(">>>req_bank:",reqmac,mac);
