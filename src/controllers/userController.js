@@ -83,6 +83,10 @@ const fetchycbydate = async (req, res) => {
     const data = await fetchycbydateService(datadate);
     return res.status(200).json(data)
 }
+const postPayment = async (req, res) => {   
+    console.log(">>>req_bank:",req);
+    return res.status(200).json("data")
+}
 const guiDuyetyeucau = async (req, res) => {   
     const {idyc,maquyen,tenbn} = req.body;     
     const data = await guiDuyetyeucauService(idyc,maquyen,tenbn);
@@ -134,6 +138,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    postPayment,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }

@@ -13,8 +13,7 @@ const Luulog= async (mail, name,ipclient,api)=>{
        
 }
 const auth = (req, res, next) => {
-    console.log(">>>req_bank:",req);
-    const white_lists = ["/", "/register", "/login","/postkqcls"];
+    const white_lists = ["/", "/register", "/login","/postkqcls","/postPayment"];
     if (white_lists.find(item => '/v1/api' + item === req.originalUrl)) {
         next();
     } else if(req?.headers["zalo-access-token"]){
