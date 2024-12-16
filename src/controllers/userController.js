@@ -93,18 +93,17 @@ const postPayment = async (req, res) => {
                    .digest('hex');
   
     if (hash == mac) {
-     const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
+        const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
       // request hợp lệ      
-      const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
+        const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
             // "appId={appId}&orderId={orderId}&resultCode={resultCode}&privateKey={privateKey}";
-      const hashmac = crypto.createHmac('sha256', privateKey)
+        const hashmac = crypto.createHmac('sha256', privateKey)
             .update(dataMac)
             .digest('hex');    
             let body = {
                 appId:appId,
                 orderId: orderId,
-                resultCode: 1,
-                mac: hashmac
+                resultCode: 1
               }
       const res = await fetch(url, {
         method: 'POST',
