@@ -95,7 +95,7 @@ const postPayment = async (req, res) => {
     if (hash == mac) {
         const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
       // request hợp lệ      
-      const dataMac = "appId='"+appId+"'&orderId='"+orderId+"'&resultCode=1&privateKey="+privateKey;   
+      const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
             // "appId={appId}&orderId={orderId}&resultCode={resultCode}&privateKey={privateKey}";
       const hashmac = crypto.createHmac('sha256', privateKey)
             .update(dataMac)
@@ -114,7 +114,7 @@ const postPayment = async (req, res) => {
         body: JSON.stringify(body),
       });  
       const result = await res.json();
-      console.log("successPament>>>",result,"key>>",appId,">",orderId,">",hashmac)
+      console.log("successPament>>>",result,"key>>",appId,"",orderId,">",hashmac);
     } else {
         return "Loitt";
       // request không hợp lệ
