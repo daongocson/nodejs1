@@ -91,20 +91,34 @@ const postPayment = async (req, res) => {
     const hash = crypto.createHmac('sha256', privateKey)
                    .update(datastr)
                    .digest('hex');
-
-    // reqmac = HMAC('HmacSHA256', privateKey, data);
-    console.log(">>>req_bank:",hash,">>",mac);
-    if (reqmac == mac) {
-        
+  
+    if (hash == mac) {
+     const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
       // request hợp lệ
+      let body = {
+        appId:appId,
+        orderId: orderId,
+        resultCode: 1,
+        mac: hash
+      }
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+         
+        },
+        body: JSON.stringify(body),
+      });  
+      const result = await res.json();
+      console.log("successPament>>>",result)
     } else {
+        return "test";
       // request không hợp lệ
     }
 
     
 
-    // https://payment-mini.zalo.me/api/transaction/{Mini-App-ID}/bank-callback-payment
-    // console.log(">>>req_bank:",req);
+   
     return res.status(200).json("data")
 }
 const guiDuyetyeucau = async (req, res) => {   
