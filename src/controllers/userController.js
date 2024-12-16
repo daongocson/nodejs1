@@ -83,7 +83,7 @@ const fetchycbydate = async (req, res) => {
     const data = await fetchycbydateService(datadate);
     return res.status(200).json(data)
 }
-const postPayment = async (req, res) => {       
+const postPaymentNotice = async (req, res) => {       
     const {data,mac} = req.body;
     const{appId,orderId,method}=data;
     const privateKey ='a863956b298ae5e1937335b653a52459';
@@ -119,11 +119,13 @@ const postPayment = async (req, res) => {
         return "Loitt";
       // request không hợp lệ
     }
-
-    
-
-   
     return res.status(200).json("data")
+}
+const postPayment = async (req, res) => {       
+    const {data,mac} = req.body;
+    // const{appId,orderId,method}=data
+    console.log(req.body);
+    return "data"
 }
 const guiDuyetyeucau = async (req, res) => {   
     const {idyc,maquyen,tenbn} = req.body;     
@@ -176,6 +178,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    postPayment,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }
