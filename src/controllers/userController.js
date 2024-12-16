@@ -116,16 +116,16 @@ const postPaymentNotice = async (req, res) => {
       const result = await res.json();
       console.log("successPament>>>",result,"key>>",appId,"",orderId,">",hashmac);
     } else {
-        return "Loitt";
+        return res.status(200).json("loitt");
       // request không hợp lệ
     }
     return res.status(200).json("data")
 }
 const postPayment = async (req, res) => {       
-    const {data,mac} = req.body;
+    // const {data,mac} = req.body;
     // const{appId,orderId,method}=data
     console.log(req.body);
-    return "data"
+    return res.status(200).json("data")
 }
 const guiDuyetyeucau = async (req, res) => {   
     const {idyc,maquyen,tenbn} = req.body;     
