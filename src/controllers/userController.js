@@ -86,10 +86,15 @@ const fetchycbydate = async (req, res) => {
 const postPayment = async (req, res) => {   
     // const{appId,orderId,method}=req.body.data;
     const {data,mac} = req.body;
-    const privateKey ='pJLGpXjkfD404anPIpUV';
+    const privateKey ='a863956b298ae5e1937335b653a52459';
     // data = 'appId='+appId+'&orderId='+orderId+'&method='+method;
-    reqmac = HMAC('HmacSHA256', privateKey, data);
-    console.log(">>>req_bank:",reqmac,mac);
+    const secret = 'abcdefg';
+    const hash = crypto.createHmac('sha256', privateKey)
+                   .update(data)
+                   .digest('hex');
+
+    // reqmac = HMAC('HmacSHA256', privateKey, data);
+    console.log(">>>req_bank:",reqmac,">>",mac);
     if (reqmac == mac) {
         
       // request hợp lệ
