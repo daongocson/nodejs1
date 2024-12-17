@@ -115,9 +115,10 @@ const postPaymentNotice = async (req, res) => {
       });  
       const result = await res.json();
       console.log("successPament>>>",result,"key>>",appId,"",orderId,">",hashmac);
+      return res.status(200).json({returnCode:1,returnMessage:"Thanh toán his thành cônggg"});
     } else {
-        return res.status(200).json("loitt");
-      // request không hợp lệ
+        return res.status(200).json({returnCode:0,returnMessage:"Thanh toán his Lỗiiii"});
+        // request không hợp lệ
     }
     return res.status(200).json("data")
 }
