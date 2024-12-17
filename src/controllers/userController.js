@@ -114,10 +114,14 @@ const postPaymentNotice = async (req, res) => {
         body: JSON.stringify(body),
       });  
       const result = await resUpdate.json();
-      console.log("successPament>>>1>",result,"key>>",appId,"",orderId,">",hashmac,"body>>",body);
-      return res.status(200).json({returnCode:1,returnMessage:"Thanh toán his thành cônggg"});
+      console.log("successPament>>>1>",result,"key>>",appId,"",orderId,">",hashmac,"body>>");
+      return res.status(200).json({
+            "returnCode":1,
+            "returnMessage":"Thanh toán his thành cônggg"
+        });
+        // { "returnCode": 1, "returnMessage": "Success" // tuỳ vào đối tác định nghĩa }
     } else {
-        return res.status(200).json({returnCode:0,returnMessage:"Thanh toán his Lỗiiii"});
+        return res.status(200).json({"returnCode":0,"returnMessage":"Thanh toán his Lỗiiii"});
         // request không hợp lệ
     }
     return res.status(200).json("data")
