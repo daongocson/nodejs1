@@ -114,7 +114,7 @@ const postPaymentNotice = async (req, res) => {
         body: JSON.stringify(body),
       });  
       const result = await resUpdate.json();
-      console.log("successPament>>>",result,"key>>",appId,"",orderId,">",hashmac);
+      console.log("successPament>>>1>",result,"key>>",appId,"",orderId,">",hashmac,"body>>",body);
       return res.status(200).json({returnCode:1,returnMessage:"Thanh toán his thành cônggg"});
     } else {
         return res.status(200).json({returnCode:0,returnMessage:"Thanh toán his Lỗiiii"});
@@ -149,7 +149,6 @@ const getChamcongId = async (req, res) => {
     return res.status(200).json(data)
 }
 const getLsError = async (req, res) => {   
-    console.log("Chaozalo12>>>");
     const data = await getLsErrorService(req,res);
     return res.status(200).json(data);
 }
