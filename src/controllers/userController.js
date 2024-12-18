@@ -26,7 +26,7 @@ const getMac = (params) => {
     // Tạo overall mac từ dữ liệu
     // const datastr = 'appId='+appId+'&orderId='+orderId+'&method='+method;        
     const datastr='amount=3000&desc=Thanh toán cho BVĐK Minh An&extradata={"notes": "notes"}&item=[]&method={"id":"BANK","isCustom":false}';
-    mac = calculateHMacSHA256(datastr, privateKey);
+    mac = calculateHMacSHA256(dataMac, privateKey);
     console.log("dataMac>>>",dataMac,"datastr>>>>",datastr,"Mac>>",mac);   
     return mac;
 }
@@ -104,37 +104,9 @@ const fetchycbydate = async (req, res) => {
     return res.status(200).json(data)
 }
 const postObtoMac= async (req, res)=>{
-    const{appId,orderId}=req.body;  
-    let privateKey='a863956b298ae5e1937335b653a52459';
-    // let appId="3491350673285432173";
-    // let orderId="2604263489005100260225969_1734538815999";
-    let method="BANK";
-    const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
-
-    const hashmac = calculateHMacSHA256(dataMac, privateKey); 
-    let body = {
-        appId:appId,
-        orderId: orderId,
-        resultCode: 1,
-        mac: hashmac
-      }
-    // const{appId,orderId,method}=data;
-
-    let jbody=JSON.stringify(body);
-    const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
-    const resUpdate = await fetch(url, {
-    method: 'POST',
-    headers: {
-    'content-type': 'application/json'         
-    },
-    body: jbody,
-    });  
-    const result = await resUpdate.json();
-
-    // const Object= req.body;   
-    console.log("postObtoMac_backendMac",jbody);
-    // data= getMac(Object);
-    return res.status(200).json(result);    
+    const Object= req.body;       
+    data= getMac(Object);
+    return res.status(200).json(data);    
 }
 const zaloUpdateOrderStatus= async (req, res)=>{
     const{appId,orderId}=req.body;  
