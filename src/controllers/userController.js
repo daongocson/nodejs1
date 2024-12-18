@@ -136,6 +136,39 @@ const postObtoMac= async (req, res)=>{
     // data= getMac(Object);
     return res.status(200).json(result);    
 }
+const zaloUpdateOrderStatus= async (req, res)=>{
+    const{appId,orderId}=req.body;  
+    let privateKey='a863956b298ae5e1937335b653a52459';
+    // let appId="3491350673285432173";
+    // let orderId="2604263489005100260225969_1734538815999";
+    let method="BANK";
+    const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
+
+    const hashmac = calculateHMacSHA256(dataMac, privateKey); 
+    let body = {
+        appId:appId,
+        orderId: orderId,
+        resultCode: 1,
+        mac: hashmac
+      }
+    // const{appId,orderId,method}=data;
+
+    let jbody=JSON.stringify(body);
+    const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
+    const resUpdate = await fetch(url, {
+    method: 'POST',
+    headers: {
+    'content-type': 'application/json'         
+    },
+    body: jbody,
+    });  
+    const result = await resUpdate.json();
+
+    // const Object= req.body;   
+    console.log("postObtoMac_backendMac",jbody);
+    // data= getMac(Object);
+    return res.status(200).json(result);    
+}
 const postPaymentNotice = async (req, res) => {  
         const {data,mac} = req.body;
     const{appId,orderId,method}=data;  
@@ -271,6 +304,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }
