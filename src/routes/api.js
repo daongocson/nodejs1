@@ -33,7 +33,7 @@ routerAPI.get("/", async(req, res) => {
       var rows = result.recordset;     
       // let strPlSqlbs = "select nhanvienname  from tb_nhanvien tn where nhanviencode ='bshieu-bshai'";      
       // let resultBs= await client.query(strPlSqlbs);        
-        console.log(">>>","resultBs.rows[0].nhanvienname",rows);
+        // console.log(">>>","resultBs.rows[0].nhanvienname",rows);
        return res.status(200).json("Hello world sql Con111net Database"+rows[0].tenbn);
     } catch (error) {
         return res.status(200).json(">> Erro11r connect to DB");

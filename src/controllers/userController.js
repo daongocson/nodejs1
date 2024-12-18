@@ -24,7 +24,10 @@ const getMac = (params) => {
     .join("&"); // chuyển về dạng string kèm theo "&", ví dụ: amount={amount}&desc={desc}&extradata={extradata}&item={item}&method={method}
 
     // Tạo overall mac từ dữ liệu
-    mac = calculateHMacSHA256(dataMac, privateKey);
+    // const datastr = 'appId='+appId+'&orderId='+orderId+'&method='+method;        
+    const datastr='amount=3000&desc=Thanh toán cho BVĐK Minh An&extradata={"notes": "notes"}&item=[]&method={"id":"BANK","isCustom":false}';
+    mac = calculateHMacSHA256(datastr, privateKey);
+    console.log("dataMac>>>",dataMac,"datastr>>>>",datastr,"Mac>>",mac);   
     return mac;
 }
 const handleLogin = async (req, res) => {
