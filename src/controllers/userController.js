@@ -167,7 +167,7 @@ const postPaymentNotice = async (req, res) => {
     console.log("postPaymentNotice_backendMac",jbody);
     // data= getMac(Object);
     return res.status(200).json({
-        "returnCode":0,
+        "returnCode":1,
         "returnMessage":"Thanh toán his thành cônggg"
     });       
     // const {data,mac} = req.body;
@@ -215,35 +215,8 @@ const postPaymentNotice = async (req, res) => {
     // }
     // return res.status(200).json("data")
 }
-const postPayment = async (req, res) => {       
-    const {data,mac} = req.body;
-    const{appId,orderId,method}=data
-    const privateKey ='a863956b298ae5e1937335b653a52459';
-    // console.log("postPayment>>",req.body);
-    const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
-
-    const hashmac = calculateHMacSHA256(dataMac, privateKey); 
-    let body = {
-        appId:appId,
-        orderId: orderId,
-        resultCode: 1,
-        mac: hashmac
-      }
-    // const{appId,orderId,method}=data;
-
-    let jbody=JSON.stringify(body);
-    const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
-    const resUpdate = await fetch(url, {
-    method: 'POST',
-    headers: {
-    'content-type': 'application/json'         
-    },
-    body: jbody,
-    });  
-    const result = await resUpdate.json();
-
-    // const Object= req.body;   
-    console.log("postPayment>>>",result,"body>>",jbody);
+const postPayment = async (req, res) => {  
+    console.log("postPayment>>>",result,"body",jbody);
     return res.status(200).json(result);    
 
     // return res.status(200).json("data")
