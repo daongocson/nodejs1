@@ -216,8 +216,8 @@ const postPaymentNotice = async (req, res) => {
     // return res.status(200).json("data")
 }
 const postPayment = async (req, res) => {  
-    console.log("postPayment>>>",result,"body",jbody);
-    return res.status(200).json(result);    
+    console.log("postPayment>>>","body",req.body);
+    return res.status(200).json("result");    
 
     // return res.status(200).json("data")
 }
