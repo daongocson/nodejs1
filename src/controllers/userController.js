@@ -104,61 +104,120 @@ const fetchycbydate = async (req, res) => {
     return res.status(200).json(data)
 }
 const postObtoMac= async (req, res)=>{
-    const Object= req.body;   
-    console.log("backendMac",req.body);
-    data= getMac(Object);
-    return res.status(200).json(data);    
+    let privateKey='a863956b298ae5e1937335b653a52459';
+    let appId="3491350673285432173";
+    let orderId="2604263489005100260225969_1734504414533";
+    let method="BANK";
+    const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
+
+    const hashmac = calculateHMacSHA256(dataMac, privateKey); 
+    let body = {
+        appId:appId,
+        orderId: orderId,
+        resultCode: 1,
+        mac: hashmac
+      }
+    // const{appId,orderId,method}=data;
+
+    let jbody=JSON.stringify(body);
+    const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
+    const resUpdate = await fetch(url, {
+    method: 'POST',
+    headers: {
+    'content-type': 'application/json'         
+    },
+    body: jbody,
+    });  
+    const result = await resUpdate.json();
+
+    // const Object= req.body;   
+    console.log("backendMac",jbody);
+    // data= getMac(Object);
+    return res.status(200).json(result);    
 }
-const postPaymentNotice = async (req, res) => {       
-    const {data,mac} = req.body;
-    const{appId,orderId,method}=data;
-    const privateKey ='a863956b298ae5e1937335b653a52459';
-    const datastr = 'appId='+appId+'&orderId='+orderId+'&method='+method;    
-    const hash = crypto.createHmac('sha256', privateKey)
-                   .update(datastr)
-                   .digest('hex');
-    const macno = calculateHMacSHA256(datastr, privateKey);
-    const getmacc = getMac(data,privateKey);
-    console.log("data>>",data,"Compare>>",hash,"macno>>",macno,"getmacc>>",getmacc);
-    if (hash == mac) {
-        const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
-      // request hợp lệ      
-      const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
-            // "appId={appId}&orderId={orderId}&resultCode={resultCode}&privateKey={privateKey}";
-      const hashmac = crypto.createHmac('sha256', privateKey)
-            .update(dataMac)
-            .digest('hex');    
-            let body = {
-                appId:appId,
-                orderId: orderId,
-                resultCode: 1,
-                mac: hashmac
-              }
-        let jbody=JSON.stringify(body);
-        const resUpdate = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json'         
-        },
-        body: jbody,
-      });  
-      const result = await resUpdate.json();
-      console.log("successPament>>>1>",result,"key>>",appId,">>",orderId,">",hashmac,"body>>",jbody);
-      return res.status(200).json({
-            "returnCode":1,
-            "returnMessage":"Thanh toán his thành cônggg"
-        });
-        // { "returnCode": 1, "returnMessage": "Success" // tuỳ vào đối tác định nghĩa }
-    } else {
-        return res.status(200).json({"returnCode":0,"returnMessage":"Thanh toán his Lỗiiii"});
-        // request không hợp lệ
-    }
-    return res.status(200).json("data")
+const postPaymentNotice = async (req, res) => {  
+        const {data,mac} = req.body;
+    const{appId,orderId,method}=data;  
+    let privateKey='a863956b298ae5e1937335b653a52459';
+    // let appId="3491350673285432173";
+    // let orderId="2604263489005100260225969_1734504414533";
+    // let method="BANK";
+    const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
+
+    const hashmac = calculateHMacSHA256(dataMac, privateKey); 
+    let body = {
+        appId:appId,
+        orderId: orderId,
+        resultCode: 1,
+        mac: hashmac
+      }
+    let jbody=JSON.stringify(body);
+    const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
+    const resUpdate = await fetch(url, {
+    method: 'POST',
+    headers: {
+    'content-type': 'application/json'         
+    },
+    body: jbody,
+    });  
+    const result = await resUpdate.json();
+
+    // const Object= req.body;   
+    console.log("backendMac",jbody,"result>>",result);
+    // data= getMac(Object);
+    return res.status(200).json({
+        "returnCode":1,
+        "returnMessage":"Thanh toán his thành cônggg"
+    });       
+    // const {data,mac} = req.body;
+    // const{appId,orderId,method}=data;
+    // const privateKey ='a863956b298ae5e1937335b653a52459';
+    // const datastr = 'appId='+appId+'&orderId='+orderId+'&method='+method;    
+    // const hash = crypto.createHmac('sha256', privateKey)
+    //                .update(datastr)
+    //                .digest('hex');
+    // const macno = calculateHMacSHA256(datastr, privateKey);
+    // const getmacc = getMac(data,privateKey);
+    // console.log("data>>",data,"Compare>>",hash,"macno>>",macno,"getmacc>>",getmacc);
+    // if (hash == mac) {
+    //     const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
+    //   // request hợp lệ      
+    //   const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
+    //         // "appId={appId}&orderId={orderId}&resultCode={resultCode}&privateKey={privateKey}";
+    //   const hashmac = crypto.createHmac('sha256', privateKey)
+    //         .update(dataMac)
+    //         .digest('hex');    
+    //         let body = {
+    //             appId:appId,
+    //             orderId: orderId,
+    //             resultCode: 1,
+    //             mac: hashmac
+    //           }
+    //     let jbody=JSON.stringify(body);
+    //     const resUpdate = await fetch(url, {
+    //     method: 'POST',
+    //     headers: {
+    //       'content-type': 'application/json'         
+    //     },
+    //     body: jbody,
+    //   });  
+    //   const result = await resUpdate.json();
+    //   console.log("successPament>>>1>",result,"key>>",appId,">>",orderId,">",hashmac,"body>>",jbody);
+    //   return res.status(200).json({
+    //         "returnCode":1,
+    //         "returnMessage":"Thanh toán his thành cônggg"
+    //     });
+    //     // { "returnCode": 1, "returnMessage": "Success" // tuỳ vào đối tác định nghĩa }
+    // } else {
+    //     return res.status(200).json({"returnCode":0,"returnMessage":"Thanh toán his Lỗiiii"});
+    //     // request không hợp lệ
+    // }
+    // return res.status(200).json("data")
 }
 const postPayment = async (req, res) => {       
     // const {data,mac} = req.body;
     // const{appId,orderId,method}=data
-    console.log(req.body);
+    console.log("postPayment>>",req.body);
     return res.status(200).json("data")
 }
 const guiDuyetyeucau = async (req, res) => {   
