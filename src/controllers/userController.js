@@ -216,10 +216,36 @@ const postPaymentNotice = async (req, res) => {
     // return res.status(200).json("data")
 }
 const postPayment = async (req, res) => {       
-    // const {data,mac} = req.body;
-    // const{appId,orderId,method}=data
-    console.log("postPayment>>",req.body);
-    return res.status(200).json("data")
+    const {data,mac} = req.body;
+    const{appId,orderId,method}=data
+    // console.log("postPayment>>",req.body);
+    const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
+
+    const hashmac = calculateHMacSHA256(dataMac, privateKey); 
+    let body = {
+        appId:appId,
+        orderId: orderId,
+        resultCode: 1,
+        mac: hashmac
+      }
+    // const{appId,orderId,method}=data;
+
+    let jbody=JSON.stringify(body);
+    const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
+    const resUpdate = await fetch(url, {
+    method: 'POST',
+    headers: {
+    'content-type': 'application/json'         
+    },
+    body: jbody,
+    });  
+    const result = await resUpdate.json();
+
+    // const Object= req.body;   
+    console.log("postPayment",result);
+    return res.status(200).json(result);    
+
+    // return res.status(200).json("data")
 }
 const guiDuyetyeucau = async (req, res) => {   
     const {idyc,maquyen,tenbn} = req.body;     
