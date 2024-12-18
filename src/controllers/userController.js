@@ -9,7 +9,24 @@ const createUser = async (req, res) => {
     const { name, email, password } = req.body; 
     return res.status(200).json({name, email, password})
 }
+const getMac = (params) => {
+    let privateKey="a863956b298ae5e1937335b653a52459";
+    const dataMac = Object.keys(params)
+    .sort() // sắp xếp key của Object data theo thứ tự từ điển tăng dần
+    .map(
+        (key) =>
+        `${key}=${
+            typeof params[key] === "object"
+            ? JSON.stringify(params[key])
+            : params[key]
+        }`,
+    ) // trả về mảng dữ liệu dạng [{key=value}, ...]
+    .join("&"); // chuyển về dạng string kèm theo "&", ví dụ: amount={amount}&desc={desc}&extradata={extradata}&item={item}&method={method}
 
+    // Tạo overall mac từ dữ liệu
+    mac = calculateHMacSHA256(dataMac, privateKey);
+    return mac;
+}
 const handleLogin = async (req, res) => {
     const { email, password,ipClient } = req.body;    
   //  logAction("handleLogin",email+"login at IP-"+ipClient+":"+(new Date()).getMilliseconds());
@@ -83,6 +100,12 @@ const fetchycbydate = async (req, res) => {
     const data = await fetchycbydateService(datadate);
     return res.status(200).json(data)
 }
+const postObtoMac= async (req, res)=>{
+    const Object= req.body;   
+    console.log("backendMac",req.body);
+    data= getMac(Object);
+    return res.status(200).json(data);    
+}
 const postPaymentNotice = async (req, res) => {       
     const {data,mac} = req.body;
     const{appId,orderId,method}=data;
@@ -91,7 +114,9 @@ const postPaymentNotice = async (req, res) => {
     const hash = crypto.createHmac('sha256', privateKey)
                    .update(datastr)
                    .digest('hex');
-  
+    const macno = calculateHMacSHA256(datastr, privateKey);
+    const getmacc = getMac(data,privateKey);
+    console.log("data>>",data,"Compare>>",hash,"macno>>",macno,"getmacc>>",getmacc);
     if (hash == mac) {
         const url= "https://payment-mini.zalo.me/api/transaction/3491350673285432173/bank-callback-payment";
       // request hợp lệ      
@@ -182,6 +207,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }
