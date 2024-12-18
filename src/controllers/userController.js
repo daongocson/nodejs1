@@ -134,15 +134,16 @@ const postPaymentNotice = async (req, res) => {
                 resultCode: 1,
                 mac: hashmac
               }
-      const resUpdate = await fetch(url, {
+        let jbody=JSON.stringify(body);
+        const resUpdate = await fetch(url, {
         method: 'POST',
         headers: {
           'content-type': 'application/json'         
         },
-        body: JSON.stringify(body),
+        body: jbody,
       });  
       const result = await resUpdate.json();
-      console.log("successPament>>>1>",result,"key>>",appId,"",orderId,">",hashmac,"body>>");
+      console.log("successPament>>>1>",result,"key>>",appId,">>",orderId,">",hashmac,"body>>",jbody);
       return res.status(200).json({
             "returnCode":1,
             "returnMessage":"Thanh toán his thành cônggg"
