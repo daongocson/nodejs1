@@ -167,8 +167,8 @@ const postPaymentNotice = async (req, res) => {
     console.log("postPaymentNotice_backendMac",jbody);
     // data= getMac(Object);
     return res.status(200).json({
-        "returnCodefdfdf":"81",
-        "returnMessagedfdfd":"Thanh toán his thành cônggg"
+        "returnCode":0,
+        "returnMessage":"Thanh toán his thành cônggg"
     });       
     // const {data,mac} = req.body;
     // const{appId,orderId,method}=data;
@@ -218,6 +218,7 @@ const postPaymentNotice = async (req, res) => {
 const postPayment = async (req, res) => {       
     const {data,mac} = req.body;
     const{appId,orderId,method}=data
+    const privateKey ='a863956b298ae5e1937335b653a52459';
     // console.log("postPayment>>",req.body);
     const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
 
@@ -242,7 +243,7 @@ const postPayment = async (req, res) => {
     const result = await resUpdate.json();
 
     // const Object= req.body;   
-    console.log("postPayment",result);
+    console.log("postPayment>>>",result,"body>>",jbody);
     return res.status(200).json(result);    
 
     // return res.status(200).json("data")
