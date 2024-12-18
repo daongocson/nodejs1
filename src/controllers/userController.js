@@ -24,10 +24,7 @@ const getMac = (params) => {
     .join("&"); // chuyển về dạng string kèm theo "&", ví dụ: amount={amount}&desc={desc}&extradata={extradata}&item={item}&method={method}
 
     // Tạo overall mac từ dữ liệu
-    // const datastr = 'appId='+appId+'&orderId='+orderId+'&method='+method;        
-    const datastr='amount=3000&desc=Thanh toán cho BVĐK Minh An&extradata={"notes": "notes"}&item=[]&method={"id":"BANK","isCustom":false}';
     mac = calculateHMacSHA256(dataMac, privateKey);
-    console.log("dataMac>>>",dataMac,"datastr>>>>",datastr,"Mac>>",mac);   
     return mac;
 }
 const handleLogin = async (req, res) => {
@@ -105,7 +102,7 @@ const fetchycbydate = async (req, res) => {
 }
 const postObtoMac= async (req, res)=>{
     const Object= req.body;       
-    data= getMac(Object);
+    let data= getMac(Object);
     return res.status(200).json(data);    
 }
 const zaloUpdateOrderStatus= async (req, res)=>{
