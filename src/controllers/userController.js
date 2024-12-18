@@ -104,9 +104,10 @@ const fetchycbydate = async (req, res) => {
     return res.status(200).json(data)
 }
 const postObtoMac= async (req, res)=>{
+    const{appId,orderId}=req.body;  
     let privateKey='a863956b298ae5e1937335b653a52459';
-    let appId="3491350673285432173";
-    let orderId="2604263489005100260225969_1734504414533";
+    // let appId="3491350673285432173";
+    // let orderId="2604263489005100260225969_1734538815999";
     let method="BANK";
     const dataMac = 'appId='+appId+'&orderId='+orderId+'&resultCode=1&privateKey='+privateKey;   
 
@@ -131,7 +132,7 @@ const postObtoMac= async (req, res)=>{
     const result = await resUpdate.json();
 
     // const Object= req.body;   
-    console.log("backendMac",jbody);
+    console.log("postObtoMac_backendMac",jbody);
     // data= getMac(Object);
     return res.status(200).json(result);    
 }
@@ -163,7 +164,7 @@ const postPaymentNotice = async (req, res) => {
     const result = await resUpdate.json();
 
     // const Object= req.body;   
-    console.log("backendMac",jbody,"result>>",result);
+    console.log("postPaymentNotice_backendMac",jbody);
     // data= getMac(Object);
     return res.status(200).json({
         "returnCode":1,
