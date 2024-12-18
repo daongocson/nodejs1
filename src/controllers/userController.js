@@ -167,8 +167,8 @@ const postPaymentNotice = async (req, res) => {
     console.log("postPaymentNotice_backendMac",jbody);
     // data= getMac(Object);
     return res.status(200).json({
-        "returnCode":1,
-        "returnMessage":"Thanh toán his thành cônggg"
+        "returnCodefdfdf":"81",
+        "returnMessagedfdfd":"Thanh toán his thành cônggg"
     });       
     // const {data,mac} = req.body;
     // const{appId,orderId,method}=data;
