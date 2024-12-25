@@ -723,10 +723,14 @@ const getKqclsByidService = async (mavp) => {
            //  console.log('Connected to PostgreSQL database');
          });             
      
-        let strPlSql="select servicedataid as id,treatmentid,data_value,servicename as name,TO_CHAR(servicedatausedate,'dd/MM HH24:MI') as tgYl,TO_CHAR(end_date,'dd/MM HH24:MI') as tgKq, dm_servicegroupid as manhom from tb_servicedata ts where soluong> 0 and dm_servicegroupid > 0 and dm_servicegroupid in(4) and patientrecordid ='"+idmavp+"'";  
-        let strPatientSql="select patientname, (select roomname from tb_room tr where tr.roomid  = tp.roomid_out) as roomname ,patientcode,dm_patientobjectid,TO_CHAR(receptiondate,'dd/MM/yyyy HH24:MI') as ngayvao,TO_CHAR(medicalrecorddate_out,'dd/MM/yyyy HH24:MI') as ngayra "
+        // let strPlSql="select servicedataid as id,treatmentid,data_value,servicename as name,TO_CHAR(servicedatausedate,'dd/MM HH24:MI') as tgYl,TO_CHAR(end_date,'dd/MM HH24:MI') as tgKq, dm_servicegroupid as manhom from tb_servicedata ts where soluong> 0 and dm_servicegroupid > 0 and dm_servicegroupid in(4) and patientrecordid ='"+idmavp+"'";  
+        // let strPatientSql="select patientname, (select roomname from tb_room tr where tr.roomid  = tp.roomid_out) as roomname ,patientcode,dm_patientobjectid,TO_CHAR(receptiondate,'dd/MM/yyyy HH24:MI') as ngayvao,TO_CHAR(medicalrecorddate_out,'dd/MM/yyyy HH24:MI') as ngayra "
+        // +",chandoan_out_main_icd10 ,chandoan_out_main,insurancecode,thonxom ||'-'||tdx.dm_xaname as diachi"+
+        // " from tb_patientrecord tp,tb_dm_xa tdx where tdx.dm_xacode =tp.dm_xacode and patientrecordid ='"+idmavp+"'";             
+        let strPlSql="select servicedataid as id,servicedataid_master as idcon,treatmentid,serviceresultunit as donvi,datareference as binhthuong,data_value,servicename as name,TO_CHAR(servicedatausedate,'dd/MM HH24:MI') as tgYl,TO_CHAR(end_date,'dd/MM HH24:MI') as tgKq, dm_servicegroupid as manhom from tb_servicedata ts where dm_servicedatastatusid <> 10 and dm_servicegroupid > 0 and dm_servicegroupid in(3,4) and patientrecordid ='"+idmavp+"'";  
+        let strPatientSql="select patientname,dm_gioitinhid, (select roomname from tb_room tr where tr.roomid  = tp.roomid_out) as roomname ,patientcode,dm_patientobjectid,TO_CHAR(receptiondate,'dd/MM/yyyy HH24:MI') as ngayvao,TO_CHAR(medicalrecorddate_out,'dd/MM/yyyy HH24:MI') as ngayra "
         +",chandoan_out_main_icd10 ,chandoan_out_main,insurancecode,thonxom ||'-'||tdx.dm_xaname as diachi"+
-        " from tb_patientrecord tp,tb_dm_xa tdx where tdx.dm_xacode =tp.dm_xacode and patientrecordid ='"+idmavp+"'";             
+        " from tb_patientrecord tp,tb_dm_xa tdx where tdx.dm_xacode =tp.dm_xacode and patientrecordid ='"+idmavp+"'"; 
         // console.log(strPlSql);
         let result= await client.query(strPlSql);        
         let resultInfo= await client.query(strPatientSql);
@@ -734,14 +738,15 @@ const getKqclsByidService = async (mavp) => {
         await sql.connect(sqlConfig);                    
         var arrayInfo = [];      
         var arrayDV = [];
+        var arrayXN = [];
         var rows = result.rows;
         var rowsInfo = resultInfo.rows;
         rows.forEach(function(item) {  
              if(item.manhom==1){                                                
                  arrayKB.push(item);  
              }                         
-             else if(item.manhom==7){
-                 arrayTH.push(item);  
+             else if(item.manhom==3){
+                 arrayXN.push(item);  
              }
              else{
                  arrayDV.push(item);  
@@ -753,7 +758,11 @@ const getKqclsByidService = async (mavp) => {
              if(item.dm_patientobjectid==2)
                  arrayInfo.push({id:"3",name:"Đối tượng",value:"Viện phí"});
              else
-                 arrayInfo.push({id:"3",name:"Đối tượng",value:"Bảo hiểm"});               
+                 arrayInfo.push({id:"3",name:"Đối tượng",value:"Bảo hiểm"});  
+            if(item.dm_gioitinhid==1)
+                arrayInfo.push({id:"11",name:"Giới tính",value:"Nam"});
+            else
+                arrayInfo.push({id:"11",name:"Giới tính",value:"Nữ"});             
              if(item.chandoan_out_main_icd10)
                  arrayInfo.push({id:"4",name:"ICD",value:item.chandoan_out_main_icd10});
              if(item.chandoan_out_main)
@@ -771,12 +780,56 @@ const getKqclsByidService = async (mavp) => {
          .then(() => {
            //  console.log('Connection to PostgreSQL closed');
          })            
-         arrayDV.sort((date1, date2) => date1 - date2);                   
+         arrayDV.sort((date1, date2) => date1 - date2);  
+         arrayXN.sort((date1, date2) => date1 - date2);                   
          return {
              dataKH: arrayInfo,
-             dataDV: arrayDV
-            
+             dataDV: arrayDV,
+             dataXN: arrayXN
          };
+        // var rows = result.rows;
+        // var rowsInfo = resultInfo.rows;
+        // rows.forEach(function(item) {  
+        //      if(item.manhom==1){                                                
+        //          arrayKB.push(item);  
+        //      }                         
+        //      else if(item.manhom==7){
+        //          arrayTH.push(item);  
+        //      }
+        //      else{
+        //          arrayDV.push(item);  
+        //      }
+        //  });  
+        //  rowsInfo.forEach(function(item) {                 
+        //      arrayInfo.push({id:"1",name:"Tên khách hàng",value:item.patientname});
+        //      arrayInfo.push({id:"2",name:"Mã khách hàng",value:item.patientcode});
+        //      if(item.dm_patientobjectid==2)
+        //          arrayInfo.push({id:"3",name:"Đối tượng",value:"Viện phí"});
+        //      else
+        //          arrayInfo.push({id:"3",name:"Đối tượng",value:"Bảo hiểm"});               
+        //      if(item.chandoan_out_main_icd10)
+        //          arrayInfo.push({id:"4",name:"ICD",value:item.chandoan_out_main_icd10});
+        //      if(item.chandoan_out_main)
+        //          arrayInfo.push({id:"5",name:"Mã bệnh",value:item.chandoan_out_main});                
+        //      if(item.insurancecode)
+        //          arrayInfo.push({id:"8",name:"Mã Thẻ",value:item.insurancecode});    
+        //    //  arrayInfo.push({id:"9",name:"Địa chỉ",value:item.diachi});               
+        //      arrayInfo.push({id:"6",name:"Ngày vào",value:item.ngayvao});
+        //      arrayInfo.push({id:"7",name:"Ngày ra viện",value:item.ngayra});  
+        //      arrayInfo.push({id:"10",name:"Phòng ra viện",value:item.roomname});  
+                           
+            
+        //  });              
+        //  client.end()
+        //  .then(() => {
+        //    //  console.log('Connection to PostgreSQL closed');
+        //  })            
+        //  arrayDV.sort((date1, date2) => date1 - date2);                   
+        //  return {
+        //      dataKH: arrayInfo,
+        //      dataDV: arrayDV
+            
+        //  };
          //return result.rows;
      } catch (error) {
          console.log(error);
