@@ -63,6 +63,11 @@ const getPatient = async (req, res) => {
     const data = await getPatientService(mavp);    
     return res.status(200).json(data);
 }
+const postPatientByphone = async (req, res) => {       
+    const {mavp} = req.body;      
+    const data = await getPatientService("521456");    
+    return res.status(200).json(data);
+}
 const postkqclsByid = async (req, res) => {   
     const {mavp} = req.body;      
     const data = await getKqclsByidService(mavp);
@@ -373,6 +378,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }
