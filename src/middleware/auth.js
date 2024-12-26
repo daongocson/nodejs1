@@ -13,7 +13,9 @@ const Luulog= async (mail, name,ipclient,api)=>{
        
 }
 const auth = (req, res, next) => {
-    const white_lists = ["/", "/register", "/login","/postkqcls","/postPayment","/postPaymentNotice","/postObtoMac","/zaloUpdateOrderStatus"];
+    const white_lists = ["/", "/register", "/login","/postkqcls","/postPayment","/postPaymentNotice","/postObtoMac","/zaloUpdateOrderStatus",
+        "/getnotification","/getcategories","/getproducts","/getdoctorrate","/getbvrate"
+    ];
     if (white_lists.find(item => '/v1/api' + item === req.originalUrl)) {
         next();
     } else if(req?.headers["zalo-access-token"]){

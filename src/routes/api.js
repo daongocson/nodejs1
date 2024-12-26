@@ -1,6 +1,6 @@
 const express = require('express');
 const sql = require('mssql');
-const { guiChamcong,createUser, handleLogin, getUser,  getAccount,getLsError, getLsDoctors, getYlbacsi, getPatient, getLsPhongkham, getLskhambenh, getLsCskh, getLschamcong, getChamcongId, guiYeucau, getLsycsua, guiDuyetyeucau, deleteYeucau, postYcBydate, postFilldoctor, postcreatenickbs, postuserduyet, postmaquyen, fetchycbydate, postkqclsByid, postPayment, postPaymentNotice, postObtoMac, zaloUpdateOrderStatus } = require('../controllers/userController');
+const { guiChamcong,createUser, handleLogin, getUser,  getAccount,getLsError, getLsDoctors, getYlbacsi, getPatient, getLsPhongkham, getLskhambenh, getLsCskh, getLschamcong, getChamcongId, guiYeucau, getLsycsua, guiDuyetyeucau, deleteYeucau, postYcBydate, postFilldoctor, postcreatenickbs, postuserduyet, postmaquyen, fetchycbydate, postkqclsByid, postPayment, postPaymentNotice, postObtoMac, zaloUpdateOrderStatus, getNotification, getCategories, getProducts } = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delay = require('../middleware/delay');
 const routerAPI = express.Router();
@@ -62,6 +62,12 @@ routerAPI.post("/postPaymentNotice", postPaymentNotice);
 routerAPI.post("/postPayment", postPayment);
 routerAPI.post("/postObtoMac", postObtoMac);
 routerAPI.post("/zaloUpdateOrderStatus", zaloUpdateOrderStatus);
+
+routerAPI.get("/getnotification", getNotification);
+routerAPI.get("/getcategories", getCategories);
+routerAPI.get("/getdoctorrate", getCategories);
+routerAPI.get("/getbvrate", getCategories);
+routerAPI.get("/getproducts", getProducts);
 
 routerAPI.get("/user", getUser);
 routerAPI.get("/getkqcls", getPatient);

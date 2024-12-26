@@ -105,6 +105,106 @@ const postObtoMac= async (req, res)=>{
     let data= getMac(Object);
     return res.status(200).json(data);    
 }
+const getNotification= async (req, res)=>{
+    const Object= req.body;       
+    // let data= getMac(Object);
+    let data=[
+        {
+          id: 1,
+          image: "logo",
+          title: "Chào bạn mới",
+          content:
+            "Cảm ơn đã sử dụng Server getNotification, bạn có thể dùng ứng dụng này để tiết kiệm thời gian xây dựng",
+        },
+        {
+          id: 2,
+          image: "logo",
+          title: "Giảm 50% lần đầu mua hàng",
+          content: "Nhập WELCOME để được giảm 50% giá trị đơn hàng đầu tiên order",
+        },
+      ]
+    return res.status(200).json(data);    
+}
+const getCategories= async (req, res)=>{    
+    let data=
+        [
+            {
+              "id": "bacsi",
+              "name": "Mức độ Hài Lòng",
+              "icon": "https://uxwing.com/wp-content/themes/uxwing/download/medical-science-lab/homeopathic-doctor-icon.svg"            
+            }         
+          
+      ]
+    return res.status(200).json(data);    
+}
+const getProducts= async (req, res)=>{    
+    let data=
+    [
+        {
+          "id": 1,
+          "name": "Giáo Sư Bàng",
+          "price": 10000,
+          "image": "https://benhvienminhan.com/wp-content/uploads/2024/12/bsbang.jpg",
+          "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",
+          "categoryId": ["abc"],
+          "variantId": ["kham"]
+        },
+        {
+          "id": 2,
+          "name": "Bác Sĩ Khánh",
+          "price": 10000,
+          "image": "https://benhvienminhan.com/wp-content/uploads/2020/08/bs-Khanh.png",
+          "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",
+          "categoryId": ["abc"],
+          "variantId": ["size"]
+        },
+        {
+          "id": 3,
+          "name": "Bs Đậu Phi Triều",
+          "price": 10000,
+          "image": "https://benhvienminhan.com/wp-content/uploads/2020/08/3-1.jpg",
+          "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",
+          "categoryId": ["food"],
+          "variantId": ["bacsi"]
+        },
+        {
+          "id": 4,
+          "name": "Bs.Nguyễn Hồng Quân",
+          "price": 10000,
+          "image": "https://benhvienminhan.com/wp-content/uploads/2024/12/bsquan.jpg",
+          "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",
+          "categoryId": ["juice"],
+          "variantId": ["kham"]
+        },
+        {
+          "id": 9,
+          "name": "Đăng ký khám BS Khánh",
+          "image": "https://benhvienminhan.com/wp-content/uploads/2020/08/bs-Khanh.png",
+          "price": 10000,
+          "sale": {
+            "type": "percent",
+            "percent": 0.5
+          },
+          "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",
+          "categoryId": ["bacsi"],
+          "variantId": ["kham"]
+        },
+        {
+          "id": 10,
+          "name": "Đăng ký khám GS Bàng",
+          "image": "https://benhvienminhan.com/wp-content/uploads/2020/08/gs-bang.png",
+          "price": 10000,
+          "sale": {
+            "type": "percent",
+            "percent": 0.5
+          },
+          "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",
+          "categoryId": ["bacsi"],
+          "variantId": ["kham"]
+        }  
+      ]
+    return res.status(200).json(data);    
+}
 const zaloUpdateOrderStatus= async (req, res)=>{
     const{appId,orderId}=req.body;  
     let privateKey='a863956b298ae5e1937335b653a52459';
@@ -273,6 +373,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }
