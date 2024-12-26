@@ -632,6 +632,27 @@ const getLsChamcongIdService = async (manv) => {
         return null;
     }
 }
+const getPatientByPhoneService = async (mavp) => {
+    if(Number.isNaN(mavp)){
+         return;
+    }
+    try {
+        const client = new Client(dbConfig); 
+        await client.connect().then(() => {
+         //   console.log('Connected to PostgreSQL database');
+        });   
+        let strPlSql="select  patientphone,receptiondate,chandoan_out_main, patientname ||'-Ngày '|| TO_CHAR(receptiondate::date, 'dd/mm/yyyy') as name,patientrecordid,chandoan_out_main as value, patientname as id  from tb_patientrecord tp where patientphone like '%"+mavp+"' order by receptiondate desc limit 20";  
+        // console.log(strPlSql);
+        let result= await client.query(strPlSql);  
+        return {
+            dataKH: result.rows   
+        }
+        
+    }catch(error){
+        console.log(error);
+    }
+    return "";
+}
 const getPatientService = async (mavp) => {
        if(Number.isNaN(mavp)){
             return;
@@ -936,5 +957,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }

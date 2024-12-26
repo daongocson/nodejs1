@@ -1,4 +1,4 @@
-const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService } = require("../services/userService");
+const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService } = require("../services/userService");
 
 const crypto = require("crypto"); //  'crypto';
 const logAction = async (id_act,content) => {   
@@ -63,9 +63,12 @@ const getPatient = async (req, res) => {
     const data = await getPatientService(mavp);    
     return res.status(200).json(data);
 }
-const postPatientByphone = async (req, res) => {       
-    const {mavp} = req.body;      
-    const data = await getPatientService("521456");    
+const postPatientByphone = async (req, res) => {           
+    console.log("tesapigetPhone",req.body);
+    let {mavp} = req.body;   
+    // mavp="84967567638";
+    mavp   = mavp.substring(2);
+    const data = await getPatientByPhoneService(mavp);    
     return res.status(200).json(data);
 }
 const postkqclsByid = async (req, res) => {   
