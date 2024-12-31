@@ -681,7 +681,7 @@ const getRatesService = async function(){
     try {
         var datetime = new Date();   
         await sql.connect(sqlConfig);   ;
-        let strSql = "select TOP 30 [zalo_name] as id, * FROM [His_xml].[dbo].[HisRate]";        
+        let strSql = "select TOP 30 [zalo_name] as id, * FROM [His_xml].[dbo].[HisRate] order by ngaylog desc";        
         let result= await sql.query(strSql);  
         return result.recordset;
     } catch (error) {
