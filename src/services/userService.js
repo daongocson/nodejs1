@@ -677,6 +677,18 @@ const postRattingService = async (username,to_user,commt,rthaido,rchuyenmon,rkha
           return  {message:"fail",duyet:"Lỗi kết nối, quá tải hệ thống"};  
     }
 }
+const getRatesService = async function(){
+    try {
+        var datetime = new Date();   
+        await sql.connect(sqlConfig);   ;
+        let strSql = "select TOP 30 [zalo_name] as id, * FROM [His_xml].[dbo].[HisRate]";        
+        let result= await sql.query(strSql);  
+        return result.recordset;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 const getPatientService = async (mavp) => {
        if(Number.isNaN(mavp)){
             return;
@@ -1052,5 +1064,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }
