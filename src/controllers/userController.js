@@ -1,4 +1,4 @@
-const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService } = require("../services/userService");
+const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService } = require("../services/userService");
 
 const crypto = require("crypto"); //  'crypto';
 const logAction = async (id_act,content) => {   
@@ -66,10 +66,21 @@ const getPatient = async (req, res) => {
 const postPatientByphone = async (req, res) => {           
     console.log("tesapigetPhone",req.body);
     let {mavp} = req.body;   
-    // mavp="84967567638";
+   // mavp="84967567638";
     mavp   = mavp.substring(2);
     const data = await getPatientByPhoneService(mavp);    
     return res.status(200).json(data);
+}
+const postRatting = async (req, res) => {           
+    let {desc,data,username} = req.body;   
+    // const username="mrson";
+    if(!username)username="mrthaolv";
+    const idByOa="1";
+    mavp="84967567638";
+    console.log("tesapipostRatting",desc,data[0].rating,data[1].rating,data[2].rating);
+    mavp   = mavp.substring(2);
+    const datares = await postRattingService(username,idByOa,desc,data[0].rating,data[1].rating,data[2].rating);    
+    return res.status(200).json(datares);
 }
 const postkqclsByid = async (req, res) => {   
     const {mavp} = req.body;      
@@ -381,6 +392,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }

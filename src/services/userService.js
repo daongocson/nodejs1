@@ -653,6 +653,30 @@ const getPatientByPhoneService = async (mavp) => {
     }
     return "";
 }
+const postRattingService = async (username,to_user,commt,rthaido,rchuyenmon,rkham) => {
+    console.log("In-postRattingService>",commt,rthaido,rchuyenmon,rkham);
+    try {        
+    //     let PlCheck= "select * from tb_nhanvien where nhanviencode= '"+bsData.nick+"'";              
+    //     const client = new Client(dbConfig); 
+    //     await client.connect();
+    //     let resultCheck= await client.query(PlCheck);    
+    //     if(resultCheck.rows.length>0){
+    //         return {message:"Fail",duyet:"Acount đã tồn tại"};  
+    //     }else{
+           
+         let sqlServer="insert into  [His_xml].[dbo].[HisRate](zalo_name,ID_ByOA ,rate1,rate2,"
+         +"rate3,content,ngaylog) values('"+username+"','"+to_user+"','"+rthaido+"','"+rchuyenmon+"','"         
+         +rkham+"',N'"+commt+"',getdate())";       
+        console.log(sqlServer);
+          await sql.connect(sqlConfig);   
+         let result= await sql.query(sqlServer);      
+         return {message:"sucess",duyet:"Tạo nick ("+username+") thành công, Chờ IT duyệt Accout"};  
+        // }        
+    } catch (error) {
+        console.log("postFilldo",error);
+          return  {message:"fail",duyet:"Lỗi kết nối, quá tải hệ thống"};  
+    }
+}
 const getPatientService = async (mavp) => {
        if(Number.isNaN(mavp)){
             return;
@@ -1028,5 +1052,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }
