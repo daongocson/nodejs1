@@ -1,4 +1,4 @@
-const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService, getRatesService } = require("../services/userService");
+const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService, getRatesService, laysoService } = require("../services/userService");
 
 const crypto = require("crypto"); //  'crypto';
 const logAction = async (id_act,content) => {   
@@ -160,24 +160,10 @@ const getRates= async (req, res)=>{
     const data = await getRatesService();
     return res.status(200).json(data);    
 }
-const getSott= async (req, res)=>{       
-    let number = Math.floor(Math.random() * 10); 
-    let today = new Date();   
-    const formattedDate = today.toLocaleDateString('en-GB');
-    console.log("number>>",number,"body",req.body);
-    if(number==0||number==1||number==2||number==3||number==4||number==5){
-        return res.status(200).json([]);    
-    };    
-    let data=
-    [
-        {
-          "id": number,
-          "date":formattedDate,
-          "image": "https://benhvienminhan.com/wp-content/uploads/2024/12/bsbang.jpg",
-          "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",       
-        } 
-    ]
-    return res.status(200).json(data);    
+const getSott= async (req, res)=>{ 
+    const {sott,numberlayso}= req.body;         
+    const data = await laysoService(sott,numberlayso);   
+    return res.status(200).json(data);        
 }
 const getProducts= async (req, res)=>{    
     let data=

@@ -399,11 +399,64 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
                     idOa,
                     phone
             }
-            
-            
-            
         }
     }    
+}
+const laysoService = async (sott,numberlayso) => {
+    let number = Math.floor(Math.random() * 10); 
+    let today = new Date();   
+    const formattedDate = today.toLocaleDateString('en-GB');
+    const formattedDateData = today.toLocaleDateString('en-US')
+    if(!sott){
+        sott="112";
+    }
+    if(numberlayso==0){        
+        if(sott){
+            // check xem bảng lấy số chưa, nếu có rồi trả về stt
+            let sqlServer = "select *  FROM [His_xml].[dbo].[tb_sott] where ngaylog>'"+formattedDateData+"' and oaid="+sott;
+            await sql.connect(sqlConfig);           
+            let result= await sql.query(sqlServer);    
+            var rows = result.recordset;
+            if(rows.length>0){
+                let data=
+                [
+                    {
+                    "id": rows[0].stt,
+                    "date":formattedDate,
+                    "image": "https://benhvienminhan.com/wp-content/uploads/2024/12/bsbang.jpg",
+                    "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",       
+                    } 
+                ]
+                return data
+            }
+        }        
+    }else{      
+        let strPlSql = "select MAX(sothutuhientai) as stt from tb_sothutudangkykham_layso tsl where  ngaycapphat>CURRENT_DATE";
+        const client = new Client(dbConfig); 
+        await client.connect().then(() => {
+         //   console.log('Connected to PostgreSQL database');
+        });   
+        let result= await client.query(strPlSql);
+        let stt =   result.rows[0]["stt"]+1;
+        //**insert sql */
+        strPlSql = "insert into tb_sothutudangkykham_layso(ngaycapphat,useridgoi,sothutuhientai,roomid ) values(NOW(),2765,"+stt+",527)" ; 
+        await client.query(strPlSql);
+        // insert sql
+        let sqlServer="INSERT INTO [tb_sott] (stt, oaid,ngaylog)VALUES ("+stt+","+sott+",GETDATE())";
+        await sql.connect(sqlConfig);           
+        await sql.query(sqlServer);   
+        let data=
+            [
+                {
+                "id": stt,
+                "date":formattedDate,
+                "image": "https://benhvienminhan.com/wp-content/uploads/2024/12/bsbang.jpg",
+                "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",       
+                } 
+            ]
+         return data;    
+    }
+   return [];
 }
 const guiDuyetyeucauService = async (idyc,maquyen,tenbn) => {
     try {     
@@ -1064,5 +1117,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    laysoService,getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }
