@@ -160,6 +160,25 @@ const getRates= async (req, res)=>{
     const data = await getRatesService();
     return res.status(200).json(data);    
 }
+const getSott= async (req, res)=>{       
+    let number = Math.floor(Math.random() * 10); 
+    let today = new Date();   
+    const formattedDate = today.toLocaleDateString('en-GB');
+    console.log("number>>",number,"body",req.body);
+    if(number==0||number==1||number==2||number==3||number==4||number==5){
+        return res.status(200).json([]);    
+    };    
+    let data=
+    [
+        {
+          "id": number,
+          "date":formattedDate,
+          "image": "https://benhvienminhan.com/wp-content/uploads/2024/12/bsbang.jpg",
+          "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",       
+        } 
+    ]
+    return res.status(200).json(data);    
+}
 const getProducts= async (req, res)=>{    
     let data=
     [
@@ -396,6 +415,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    getRates,postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    getSott,getRates,postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }
