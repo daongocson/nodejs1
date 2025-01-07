@@ -406,10 +406,11 @@ const laysoService = async (sott,numberlayso) => {
     let number = Math.floor(Math.random() * 10); 
     let today = new Date();   
     const formattedDate = today.toLocaleDateString('en-GB');
-    const formattedDateData = today.toLocaleDateString('en-US')
+    const formattedDateData = today.toLocaleDateString('en-US')    
     if(!sott){
         sott="112";
     }
+    console.log("laysoService>>",sott,"---",numberlayso);
     if(numberlayso==0){        
         if(sott){
             // check xem bảng lấy số chưa, nếu có rồi trả về stt
