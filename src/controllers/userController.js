@@ -149,7 +149,7 @@ const getCategories= async (req, res)=>{
         [
             {
               "id": "bacsi",
-              "name": "Mức độ Hài Lòng",
+              "name": "Đánh giá bệnh viện",
               "icon": "https://uxwing.com/wp-content/themes/uxwing/download/medical-science-lab/homeopathic-doctor-icon.svg"            
             }         
           
