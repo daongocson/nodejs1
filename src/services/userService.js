@@ -402,23 +402,23 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
         }
     }    
 }
-const laysoService = async (sott,numberlayso) => {
-    let today = new Date();   
+const laysoService = async (oaid,numberlayso,today) => {
+    // let today = new Date();   
+    console.log("laysoService>>",oaid,"---",numberlayso,"numberlayso",today);
     const [month, day, year] = [
         today.getMonth(),
         today.getDate(),
         today.getFullYear(),
       ];
-    const formattedDate = day+"-"+month+"-"+year;
-    const formattedDateData = year+"-"+month+"-"+day;   
+    const formattedDate = today.toLocaleDateString('en-GB');
+    const formattedDateData = today.toLocaleDateString('en-US')    
     if(!sott){
         sott="112";
-    }
-    console.log("formattedDateData>>",today,"---",formattedDate,"fd",formattedDateData);
+    }    
     if(numberlayso==0){        
         if(sott){
             // check xem bảng lấy số chưa, nếu có rồi trả về stt
-            let sqlServer = "select *  FROM [His_xml].[dbo].[tb_sott] where ngaylog>'"+formattedDateData+"' and oaid="+sott;
+            let sqlServer = "select *  FROM [His_xml].[dbo].[tb_sott] where ngaylog>'"+year+"-"+month+"-"+day+"' and oaid="+oaid;
             console.log("laysoService>>1111",sqlServer);
 
             await sql.connect(sqlConfig);           
@@ -429,7 +429,7 @@ const laysoService = async (sott,numberlayso) => {
                 [
                     {
                     "id": rows[0].stt,
-                    "date":formattedDate,
+                    "date":day+"-"+month+"-"+year,
                     "image": "https://benhvienminhan.com/wp-content/uploads/2024/12/bsbang.jpg",
                     "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",       
                     } 
@@ -449,7 +449,7 @@ const laysoService = async (sott,numberlayso) => {
         strPlSql = "insert into tb_sothutudangkykham_layso(ngaycapphat,useridgoi,sothutuhientai,roomid ) values(NOW(),2765,"+stt+",527)" ; 
         await client.query(strPlSql);
         // insert sql
-        let sqlServer="INSERT INTO [tb_sott] (stt, oaid,ngaylog)VALUES ("+stt+","+sott+",GETDATE())";
+        let sqlServer="INSERT INTO [tb_sott] (stt, oaid,ngaylog)VALUES ("+stt+","+oaid+",GETDATE())";
         await sql.connect(sqlConfig);           
         await sql.query(sqlServer);   
         let data=

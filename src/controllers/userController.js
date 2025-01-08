@@ -213,8 +213,8 @@ const getTaxiChamcong= async (req, res)=>{
     return res.status(200).json(data);    
 }
 const getSott= async (req, res)=>{ 
-    const {sott,numberlayso}= req.body;         
-    const data = await laysoService(sott,numberlayso);   
+    const {oaid,numberlayso,today}= req.body;         
+    const data = await laysoService(oaid,numberlayso,today);   
     return res.status(200).json(data);        
 }
 const getProducts= async (req, res)=>{    
