@@ -1,4 +1,4 @@
-const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService, getRatesService, laysoService } = require("../services/userService");
+const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService, getRatesService, laysoService, postDataTaxiService } = require("../services/userService");
 
 const crypto = require("crypto"); //  'crypto';
 const logAction = async (id_act,content) => {   
@@ -74,12 +74,38 @@ const postPatientByphone = async (req, res) => {
 const postRatting = async (req, res) => {           
     let {desc,data,username} = req.body;   
     // const username="mrson";
-    if(!username)username="mrthaolv";
-    const idByOa="1";
-    mavp="84967567638";
-    console.log("tesapipostRatting",desc,data[0].rating,data[1].rating,data[2].rating);
+    if(!username){
+        const idByOa="1";
+        mavp="84967567638";
+        console.log("tesapipostRatting",desc,data[0].rating,data[1].rating,data[2].rating);
+        return  res.status(200).json("");
+    }  
     mavp   = mavp.substring(2);
     const datares = await postRattingService(username,idByOa,desc,data[0].rating,data[1].rating,data[2].rating);    
+    return res.status(200).json(datares);
+}
+const postTaxiData = async (req, res) => {           
+    console.log("postTaxiData",req.body);
+    // let {desc,data,username} = req.body;   
+    // const username="mrson";
+    // if(!username){
+    //     const idByOa="1";
+    //     mavp="84967567638";
+    //     console.log("tesapipostRatting",desc,data[0].rating,data[1].rating,data[2].rating);
+    //     return  res.status(200).json("");
+    // }  
+    // mavp   = mavp.substring(2);
+    // postTaxiData {
+    //     namezl: 'namezl',
+    //     phonenum: '09282832',
+    //     magt: '',
+    //     tenbn: 'fdfsdf',
+    //     phonebn: '',
+    //     addbn: ''
+    //   }
+      
+
+    const datares = await postDataTaxiService(req.body);    
     return res.status(200).json(datares);
 }
 const postkqclsByid = async (req, res) => {   
@@ -151,7 +177,7 @@ const getDstaxi= async (req, res)=>{
         {
           id: 1,
           image: "logo",
-          title: "Taxi 01 bạn mới",
+          title: "Taxi 01",
           phone:"0913000204",
           content:
             "Quốc Lộ 1A, Quỳnh Giang, Quỳnh Lưu, Nghệ An",
@@ -159,7 +185,7 @@ const getDstaxi= async (req, res)=>{
         {
           id: 2,
           image: "logo",
-          title: "Taxi 02 bạn mới",
+          title: "Taxi 02",
           phone:"09120456789",
           content: "Quốc Lộ 1A, Quỳnh Giang, Quỳnh Lưu, Nghệ An",
         },
@@ -423,6 +449,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    getDstaxi,getSott,getRates,postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    postTaxiData,getDstaxi,getSott,getRates,postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }

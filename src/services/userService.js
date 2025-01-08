@@ -711,15 +711,7 @@ const getPatientByPhoneService = async (mavp) => {
 }
 const postRattingService = async (username,to_user,commt,rthaido,rchuyenmon,rkham) => {
     console.log("In-postRattingService>",commt,rthaido,rchuyenmon,rkham);
-    try {        
-    //     let PlCheck= "select * from tb_nhanvien where nhanviencode= '"+bsData.nick+"'";              
-    //     const client = new Client(dbConfig); 
-    //     await client.connect();
-    //     let resultCheck= await client.query(PlCheck);    
-    //     if(resultCheck.rows.length>0){
-    //         return {message:"Fail",duyet:"Acount đã tồn tại"};  
-    //     }else{
-           
+    try {      
          let sqlServer="insert into  [His_xml].[dbo].[HisRate](zalo_name,ID_ByOA ,rate1,rate2,"
          +"rate3,content,ngaylog) values('"+username+"','"+to_user+"','"+rthaido+"','"+rchuyenmon+"','"         
          +rkham+"',N'"+commt+"',getdate())";       
@@ -727,6 +719,23 @@ const postRattingService = async (username,to_user,commt,rthaido,rchuyenmon,rkha
           await sql.connect(sqlConfig);   
          let result= await sql.query(sqlServer);      
          return {message:"sucess",duyet:"Tạo nick ("+username+") thành công, Chờ IT duyệt Accout"};  
+        // }        
+    } catch (error) {
+        console.log("postFilldo",error);
+          return  {message:"fail",duyet:"Lỗi kết nối, quá tải hệ thống"};  
+    }
+}
+const postDataTaxiService = async (dataTaxi) => {
+    console.log("In-postDataTaxiService>",dataTaxi);
+    const {namezl,phonenum,magt,tenbn,phonebn,addbn}=dataTaxi;
+    try {             
+        let sqlServer="insert into  [His_xml].[dbo].[tb_TaxiChamcong](namezl,phonenum ,tenbn,phonebn,"
+         +"magt,addbn,ngaylog) values(N'"+namezl+"','"+phonenum+"',N'"+tenbn+"','"+phonebn+"','"         
+         +magt+"',N'"+addbn+"',getdate())";       
+        // console.log(sqlServer);
+        await sql.connect(sqlConfig);   
+        let result= await sql.query(sqlServer);      
+        return {message:"sucess",duyet:"Tạo dữ liệu TaxiChamcong thành công"};  
         // }        
     } catch (error) {
         console.log("postFilldo",error);
@@ -1120,5 +1129,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    laysoService,getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    postDataTaxiService,laysoService,getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }
