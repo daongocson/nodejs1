@@ -413,7 +413,7 @@ const laysoService = async (oaid,numberlayso,today) => {
         return [];
     }    
     if(numberlayso==0){        
-        if(sott){
+        if(oaid){
             // check xem bảng lấy số chưa, nếu có rồi trả về stt
             let sqlServer = "select *  FROM [His_xml].[dbo].[tb_sott] where ngaylog>CAST( GETDATE() AS Date) and oaid="+oaid;
             console.log("laysoService>>1111",sqlServer);
