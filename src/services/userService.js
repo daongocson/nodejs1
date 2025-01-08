@@ -404,19 +404,21 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
 }
 const laysoService = async (sott,numberlayso) => {
     let today = new Date();   
-    let vday =today.getDate();
-    let vmonth =today.getMonth();
-    let vyear =today.getYear();
-    const formattedDate = today.toLocaleDateString('en-GB');
-    const formattedDateData = today.toLocaleDateString('en-US')    
+    const [month, day, year] = [
+        date.getMonth(),
+        date.getDate(),
+        date.getFullYear(),
+      ];
+    const formattedDate = day+"-"+month+"-"+year;
+    const formattedDateData = year+"-"+month+"-"+day;   
     if(!sott){
         sott="112";
     }
-    console.log("laysoService>>",sott,"---",numberlayso);
+    console.log("formattedDateData>>",today,"---",formattedDate,"fd",formattedDateData);
     if(numberlayso==0){        
         if(sott){
             // check xem bảng lấy số chưa, nếu có rồi trả về stt
-            let sqlServer = "select *  FROM [His_xml].[dbo].[tb_sott] where ngaylog>'"+vyear+"-"+vmonth+"-"+vday+"' and oaid="+sott;
+            let sqlServer = "select *  FROM [His_xml].[dbo].[tb_sott] where ngaylog>'"+formattedDateData+"' and oaid="+sott;
             console.log("laysoService>>1111",sqlServer);
 
             await sql.connect(sqlConfig);           
@@ -427,7 +429,7 @@ const laysoService = async (sott,numberlayso) => {
                 [
                     {
                     "id": rows[0].stt,
-                    "date":vday+"-"+vmonth+"-"+vyear,
+                    "date":formattedDate,
                     "image": "https://benhvienminhan.com/wp-content/uploads/2024/12/bsbang.jpg",
                     "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",       
                     } 
