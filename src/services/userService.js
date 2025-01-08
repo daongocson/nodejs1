@@ -403,8 +403,10 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
     }    
 }
 const laysoService = async (sott,numberlayso) => {
-    let number = Math.floor(Math.random() * 10); 
     let today = new Date();   
+    let vday =today.getDate();
+    let vmonth =today.getMonth();
+    let vyear =today.getYear();
     const formattedDate = today.toLocaleDateString('en-GB');
     const formattedDateData = today.toLocaleDateString('en-US')    
     if(!sott){
@@ -414,7 +416,7 @@ const laysoService = async (sott,numberlayso) => {
     if(numberlayso==0){        
         if(sott){
             // check xem bảng lấy số chưa, nếu có rồi trả về stt
-            let sqlServer = "select *  FROM [His_xml].[dbo].[tb_sott] where ngaylog>'"+formattedDateData+"' and oaid="+sott;
+            let sqlServer = "select *  FROM [His_xml].[dbo].[tb_sott] where ngaylog>'"+vyear+"-"+vmonth+"-"+vday+"' and oaid="+sott;
             console.log("laysoService>>1111",sqlServer);
 
             await sql.connect(sqlConfig);           
@@ -425,7 +427,7 @@ const laysoService = async (sott,numberlayso) => {
                 [
                     {
                     "id": rows[0].stt,
-                    "date":formattedDate,
+                    "date":vday+"-"+vmonth+"-"+vyear,
                     "image": "https://benhvienminhan.com/wp-content/uploads/2024/12/bsbang.jpg",
                     "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",       
                     } 
