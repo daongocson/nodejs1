@@ -405,9 +405,9 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
 const laysoService = async (sott,numberlayso) => {
     let today = new Date();   
     const [month, day, year] = [
-        date.getMonth(),
-        date.getDate(),
-        date.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        today.getFullYear(),
       ];
     const formattedDate = day+"-"+month+"-"+year;
     const formattedDateData = year+"-"+month+"-"+day;   
