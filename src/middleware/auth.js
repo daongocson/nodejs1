@@ -14,7 +14,7 @@ const Luulog= async (mail, name,ipclient,api)=>{
 }
 const auth = (req, res, next) => {
     const white_lists = ["/", "/register", "/login","/postkqcls","/postPayment","/postPaymentNotice","/postObtoMac","/zaloUpdateOrderStatus",
-        "/getnotification","/getcategories","/getproducts","/getdoctorrate","/getbvrate","/postRating","/postrating","/getsott"
+        "/getnotification","/getcategories","/getproducts","/getdoctorrate","/getbvrate","/postRating","/postrating","/getsott","/getdstaxi"
     ];
     if (white_lists.find(item => '/v1/api' + item === req.originalUrl)) {
         next();

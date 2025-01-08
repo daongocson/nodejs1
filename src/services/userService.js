@@ -415,6 +415,8 @@ const laysoService = async (sott,numberlayso) => {
         if(sott){
             // check xem bảng lấy số chưa, nếu có rồi trả về stt
             let sqlServer = "select *  FROM [His_xml].[dbo].[tb_sott] where ngaylog>'"+formattedDateData+"' and oaid="+sott;
+            console.log("laysoService>>1111",sqlServer);
+
             await sql.connect(sqlConfig);           
             let result= await sql.query(sqlServer);    
             var rows = result.recordset;

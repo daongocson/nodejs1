@@ -144,6 +144,28 @@ const getNotification= async (req, res)=>{
       ]
     return res.status(200).json(data);    
 }
+const getDstaxi= async (req, res)=>{
+    const Object= req.body;       
+    // let data= getMac(Object);
+    let data=[
+        {
+          id: 1,
+          image: "logo",
+          title: "Taxi 01 bạn mới",
+          phone:"0913000204",
+          content:
+            "Quốc Lộ 1A, Quỳnh Giang, Quỳnh Lưu, Nghệ An",
+        },
+        {
+          id: 2,
+          image: "logo",
+          title: "Taxi 02 bạn mới",
+          phone:"09120456789",
+          content: "Quốc Lộ 1A, Quỳnh Giang, Quỳnh Lưu, Nghệ An",
+        },
+      ]
+    return res.status(200).json(data);    
+}
 const getCategories= async (req, res)=>{    
     let data=
         [
@@ -401,6 +423,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    getSott,getRates,postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    getDstaxi,getSott,getRates,postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }
