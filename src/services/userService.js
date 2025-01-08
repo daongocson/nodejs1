@@ -407,15 +407,15 @@ const laysoService = async (oaid,numberlayso,today) => {
     let arrday = today.split('/');    
     const [month, day, year] = [arrday[1], arrday[0],arrday[2]];
     console.log("laysoService>>",oaid,"---",today,"numberlayso",tday);
-    const formattedDate = today.toLocaleDateString('en-GB');
-    const formattedDateData = today.toLocaleDateString('en-US')    
-    if(!sott){
-        sott="112";
+    const formattedDate = tday.toLocaleDateString('en-GB');
+    const formattedDateData = tday.toLocaleDateString('en-US')    
+    if(!oaid){
+        return [];
     }    
     if(numberlayso==0){        
         if(sott){
             // check xem bảng lấy số chưa, nếu có rồi trả về stt
-            let sqlServer = "select *  FROM [His_xml].[dbo].[tb_sott] where ngaylog>'"+year+"-"+month+"-"+day+"' and oaid="+oaid;
+            let sqlServer = "select *  FROM [His_xml].[dbo].[tb_sott] where ngaylog>CAST( GETDATE() AS Date) and oaid="+oaid;
             console.log("laysoService>>1111",sqlServer);
 
             await sql.connect(sqlConfig);           
