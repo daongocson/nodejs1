@@ -403,13 +403,10 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
     }    
 }
 const laysoService = async (oaid,numberlayso,today) => {
-    // let today = new Date();   
-    console.log("laysoService>>",oaid,"---",numberlayso,"numberlayso",today);
-    const [month, day, year] = [
-        today.getMonth(),
-        today.getDate(),
-        today.getFullYear(),
-      ];
+    let tday = new Date();       
+    let arrday = today.split('/');    
+    const [month, day, year] = [arrday[1], arrday[0],arrday[2]];
+    console.log("laysoService>>",oaid,"---",today,"numberlayso",tday);
     const formattedDate = today.toLocaleDateString('en-GB');
     const formattedDateData = today.toLocaleDateString('en-US')    
     if(!sott){
