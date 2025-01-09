@@ -753,6 +753,18 @@ const getRatesService = async function(){
         return null;
     }
 }
+const getDstaxiService = async function(){
+    try {
+        var datetime = new Date();   
+        await sql.connect(sqlConfig);   ;
+        let strSql = "select idtx as id,tentx as title,address as content,* FROM [His_xml].[dbo].[tb_taxilist] where trangthai=1 order by ngaylog desc";    
+        let result= await sql.query(strSql);  
+        return result.recordset;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
 const getTaxiChamcongService = async function(){
     try {
         var datetime = new Date();   
@@ -1140,5 +1152,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    getTaxiChamcongService,postDataTaxiService,laysoService,getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    getDstaxiService,getTaxiChamcongService,postDataTaxiService,laysoService,getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }

@@ -1,4 +1,4 @@
-const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService, getRatesService, laysoService, postDataTaxiService, getTaxiChamcongService } = require("../services/userService");
+const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService, getRatesService, laysoService, postDataTaxiService, getTaxiChamcongService, getDstaxiService } = require("../services/userService");
 
 const crypto = require("crypto"); //  'crypto';
 const logAction = async (id_act,content) => {   
@@ -171,31 +171,30 @@ const getNotification= async (req, res)=>{
     return res.status(200).json(data);    
 }
 const getDstaxi= async (req, res)=>{
-    const Object= req.body;       
-    // let data= getMac(Object);
-    let data=[
-        {
-          id: 1,
-          image: "logo",
-          title: "Hồ sỹ cảnh - Xe 4 chỗ",
-          phone:"0977287830",
-          content:"Quỳnh Lâm",
-        },
-        {
-          id: 2,
-          image: "logo",
-          title: "Nguyễn Văn Đoàn - Xe 4 chỗ",
-          phone:"0983555174",
-          content: "Quỳnh Lâm",
-        },{
-            id: 3,
-            image: "logo",
-            title: "Cù Ngọc Long - Xe 4 chỗ",
-            phone:"0964097844",
-            content: "Quỳnh Đôi",
-          },
-      ]
-    return res.status(200).json(data);    
+    // let data=[
+    //     {
+    //       id: 1,
+    //       image: "logo",
+    //       title: "Hồ sỹ cảnh - Xe 4 chỗ",
+    //       phone:"0977287830",
+    //       content:"Quỳnh Lâm",
+    //     },
+    //     {
+    //       id: 2,
+    //       image: "logo",
+    //       title: "Nguyễn Văn Đoàn - Xe 4 chỗ",
+    //       phone:"0983555174",
+    //       content: "Quỳnh Hoa",
+    //     },{
+    //         id: 3,
+    //         image: "logo",
+    //         title: "Cù Ngọc Long - Xe 4 chỗ",
+    //         phone:"0964097844",
+    //         content: "Quỳnh Đôi",
+    //       },
+    //   ]
+    const data = await getDstaxiService();
+    return res.status(200).json(data);          
 }
 const getCategories= async (req, res)=>{    
     let data=
