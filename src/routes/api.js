@@ -63,7 +63,6 @@ routerAPI.post("/postPaymentNotice", postPaymentNotice);
 routerAPI.post("/postPayment", postPayment);
 routerAPI.post("/postObtoMac", postObtoMac);
 routerAPI.post("/zaloUpdateOrderStatus", zaloUpdateOrderStatus);
-routerAPI.post("/postRating", postRatting);
 routerAPI.post("/postrating", postRatting);
 routerAPI.post("/getsott", getSott);
 routerAPI.post("/posttaxidata", postTaxiData);

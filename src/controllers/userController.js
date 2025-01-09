@@ -73,14 +73,12 @@ const postPatientByphone = async (req, res) => {
 }
 const postRatting = async (req, res) => {           
     let {desc,data,username} = req.body;   
-    // const username="mrson";
-    if(!username){
-        const idByOa="1";
-        mavp="84967567638";
+    console.log("postRatting>>>",req.body);
+    const idByOa="1";
+    if(!username){                
         console.log("tesapipostRatting",desc,data[0].rating,data[1].rating,data[2].rating);
         return  res.status(200).json("");
     }  
-    mavp   = mavp.substring(2);
     const datares = await postRattingService(username,idByOa,desc,data[0].rating,data[1].rating,data[2].rating);    
     return res.status(200).json(datares);
 }
