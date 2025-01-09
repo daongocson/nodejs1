@@ -177,18 +177,23 @@ const getDstaxi= async (req, res)=>{
         {
           id: 1,
           image: "logo",
-          title: "Taxi 01",
-          phone:"0913000204",
-          content:
-            "Quốc Lộ 1A, Quỳnh Giang, Quỳnh Lưu, Nghệ An",
+          title: "Hồ sỹ cảnh - Xe 4 chỗ",
+          phone:"0977287830",
+          content:"Quỳnh Lâm",
         },
         {
           id: 2,
           image: "logo",
-          title: "Taxi 02",
-          phone:"09120456789",
-          content: "Quốc Lộ 1A, Quỳnh Giang, Quỳnh Lưu, Nghệ An",
-        },
+          title: "Nguyễn Văn Đoàn - Xe 4 chỗ",
+          phone:"0983555174",
+          content: "Quỳnh Lâm",
+        },{
+            id: 3,
+            image: "logo",
+            title: "Cù Ngọc Long - Xe 4 chỗ",
+            phone:"0964097844",
+            content: "Quỳnh Đôi",
+          },
       ]
     return res.status(200).json(data);    
 }
