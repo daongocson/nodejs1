@@ -197,10 +197,20 @@ const getCategories= async (req, res)=>{
     let data=
         [
             {
-              "id": "bacsi",
+              "id": "1",
               "name": "Đánh giá bệnh viện",
               "icon": "https://uxwing.com/wp-content/themes/uxwing/download/medical-science-lab/homeopathic-doctor-icon.svg"            
-            }         
+            },     
+            {
+                "id": "2",
+                "name": "Hẹn khám",
+                "icon": "https://uxwing.com/wp-content/themes/uxwing/download/health-sickness-organs/hospital-patient-icon.svg"            
+            }, {
+                "id": "bacsi",
+                "name": "Khám BS Hà Nội",
+                "icon": "https://uxwing.com/wp-content/themes/uxwing/download/education-school/scientist-icon.svg"            
+            }          
+
           
       ]
     return res.status(200).json(data);    
