@@ -402,7 +402,7 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
         }
     }    
 }
-const laysoService = async (oaid,numberlayso,today) => {
+const laysoService = async (oaid,name,numberlayso,today) => {
     let tday = new Date();       
     let arrday = today.split('/');    
     const [month, day, year] = [arrday[1], arrday[0],arrday[2]];
@@ -444,7 +444,7 @@ const laysoService = async (oaid,numberlayso,today) => {
         strPlSql = "insert into tb_sothutudangkykham_layso(ngaycapphat,useridgoi,sothutuhientai,roomid ) values(NOW(),2765,"+stt+",527)" ; 
         await client.query(strPlSql);
         // insert sql
-        let sqlServer="INSERT INTO [tb_sott] (stt, oaid,ngaylog)VALUES ("+stt+","+oaid+",GETDATE())";
+        let sqlServer="INSERT INTO [tb_sott] (stt, oaid,name,ngaylog)VALUES ("+stt+","+oaid+",N'"+name+"',GETDATE())";
         await sql.connect(sqlConfig);           
         await sql.query(sqlServer);   
         let data=
@@ -459,6 +459,23 @@ const laysoService = async (oaid,numberlayso,today) => {
          return data;    
     }
    return [];
+}
+const postDataDkkbacsiService = async (dataTaxi) => {
+    console.log("In-postDataDkkbacsiService>",dataTaxi);
+    const {tenbn,phonenum,idbs,tenbs,namsinh,addbn}=dataTaxi;
+    try {             
+        let sqlServer="insert into  [His_xml].[dbo].[tb_bschuyengia](phonenum,tenbn ,idbs,tenbs,"
+         +"namsinh,addbn,ngaylog) values(N'"+phonenum+"','"+tenbn+"','"+idbs+"',N'"+tenbs+"','"         
+         +namsinh+"',N'"+addbn+"',getdate())";       
+        // console.log(sqlServer);
+        await sql.connect(sqlConfig);   
+        let result= await sql.query(sqlServer);      
+        return {message:"sucess",duyet:"Tạo dữ liệu bệnh nhân đăng ký thành công"};  
+        // }        
+    } catch (error) {
+        console.log("postFilldo",error);
+          return  {message:"fail",duyet:"Lỗi kết nối, quá tải hệ thống"};  
+    }
 }
 const guiDuyetyeucauService = async (idyc,maquyen,tenbn) => {
     try {     
@@ -1033,5 +1050,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    getDstaxiService,getTaxiChamcongService,postDataTaxiService,laysoService,getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    postDataDkkbacsiService,getDstaxiService,getTaxiChamcongService,postDataTaxiService,laysoService,getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }

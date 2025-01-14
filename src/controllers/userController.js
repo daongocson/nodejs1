@@ -1,4 +1,4 @@
-const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService, getRatesService, laysoService, postDataTaxiService, getTaxiChamcongService, getDstaxiService } = require("../services/userService");
+const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService, getRatesService, laysoService, postDataTaxiService, getTaxiChamcongService, getDstaxiService, postDataDkkbacsiService } = require("../services/userService");
 
 const crypto = require("crypto"); //  'crypto';
 const logAction = async (id_act,content) => {   
@@ -105,6 +105,11 @@ const postTaxiData = async (req, res) => {
     const datares = await postDataTaxiService(req.body);    
     return res.status(200).json(datares);
 }
+const postDkkbacsi = async (req, res) => {           
+    console.log("postDkkbacsi",req.body);
+    const datares = await postDataDkkbacsiService(req.body);    
+    return res.status(200).json(datares);
+}
 const postkqclsByid = async (req, res) => {   
     const {mavp} = req.body;      
     const data = await getKqclsByidService(mavp);
@@ -203,7 +208,7 @@ const getCategories= async (req, res)=>{
             },     
             {
                 "id": "2",
-                "name": "Tái Khám",
+                "name": "Đăng ký Khám",
                 "icon": "https://uxwing.com/wp-content/themes/uxwing/download/health-sickness-organs/hospital-patient-icon.svg"            
             }, {
                 "id": "bacsi",
@@ -224,8 +229,8 @@ const getTaxiChamcong= async (req, res)=>{
     return res.status(200).json(data);    
 }
 const getSott= async (req, res)=>{ 
-    const {oaid,numberlayso,today}= req.body;         
-    const data = await laysoService(oaid,numberlayso,today);   
+    const {oaid,name,numberlayso,today}= req.body;         
+    const data = await laysoService(oaid,name,numberlayso,today);   
     return res.status(200).json(data);        
 }
 const getProducts= async (req, res)=>{    
@@ -464,6 +469,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    getTaxiChamcong,postTaxiData,getDstaxi,getSott,getRates,postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    postDkkbacsi,getTaxiChamcong,postTaxiData,getDstaxi,getSott,getRates,postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }
