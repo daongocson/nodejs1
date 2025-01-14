@@ -234,8 +234,8 @@ const getSott= async (req, res)=>{
     return res.status(200).json(data);        
 }
 const getDkKham= async (req, res)=>{ 
-    const {oaid,today}= req.body;         
-    const data = await getDkKhamService(oaid,today);   
+    const {idoa,today}= req.body;         
+    const data = await getDkKhamService(idoa,today);   
     return res.status(200).json(data);        
 }
 const getProducts= async (req, res)=>{    
