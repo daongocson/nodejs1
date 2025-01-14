@@ -403,7 +403,7 @@ const postChamcongService = async (tennv,idOa,phone,vitri) => {
     }    
 }
 const getDkKhamService = async (idoa,today) => {
-    if(oaid){
+    if(idoa){
         // check xem bảng lấy số chưa, nếu có rồi trả về stt
         let sqlServer = "select * FROM [His_xml].[dbo].[tb_bschuyengia] where ngaylog>CAST( GETDATE() AS Date) and idoa="+idoa;          
         await sql.connect(sqlConfig);           
