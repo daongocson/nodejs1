@@ -331,7 +331,7 @@ const getProducts= async (req, res)=>{
               "type": "percent",
               "percent": 0.5
             },
-            "description": "Hồ sơ khám sức khỏe của người từ đủ 18 tuổi trở lên",
+            "description": "Hồ sơ khám sức khỏe lái xe của người từ đủ 18 tuổi trở lên",
             "categoryId": ["ksk"],
             "variantId": ["kham"]
           },  
@@ -344,7 +344,7 @@ const getProducts= async (req, res)=>{
               "type": "percent",
               "percent": 0.5
             },
-            "description": "BV là đơn vị duy nhất tại khu vực Bắc miền trung được cấp giấy phép KSK đi Đài Loan. Ngoài ra, BV còn cấp GP KSKtại các nước Châu Âu (Rumani, Hungary, Ba Lan, Serbia,…), Nhật, Hàn, Singapore,…",
+            "description": "Hồ sơ khám sức khỏe đi làm,nghỉ phép",
             "categoryId": ["ksk"],
             "variantId": ["kham"]
           }   
