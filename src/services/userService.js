@@ -507,7 +507,7 @@ const postDataDkkbacsiService = async (dataTaxi) => {
     }
 }
 const postKskService = async (dataksk) => {
-    const {idoa,tenbn,phonenum,idbs,tenbs,namsinh,addbn}=dataTaxi;
+    const {idoa,tenbn,phonenum,idbs,tenbs,namsinh,addbn}=dataksk;
     try {             
         let sqlServer="insert into  [His_xml].[dbo].[ tb_ksk](idoa,phonenum,tenbn ,idbs,tenbs,"
          +"namsinh,addbn,ngaylog,trangthai) values('"+idoa+"','"+phonenum+"','"+tenbn+"','"+idbs+"',N'"+tenbs+"','"         
