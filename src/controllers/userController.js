@@ -211,7 +211,7 @@ const getCategories= async (req, res)=>{
             },     
             {
                 "id": "2",
-                "name": "Đăng ký Khám",
+                "name": "Khám SKLX",
                 "icon": "https://uxwing.com/wp-content/themes/uxwing/download/health-sickness-organs/hospital-patient-icon.svg"            
             }, {
                 "id": "bacsi",
