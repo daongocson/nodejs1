@@ -216,7 +216,7 @@ const getCategories= async (req, res)=>{
             }, {
                 "id": "4",
                 "name": "Khám Sức Khỏe",
-                "icon": "https://uxwing.com/wp-content/themes/uxwing/download/education-school/scientist-icon.svg"            
+                "icon": "https://uxwing.com/wp-content/themes/uxwing/download/medical-science-lab/health-medical-insurance-color-icon.svg"            
             }            
 
           
@@ -309,7 +309,32 @@ const getProducts= async (req, res)=>{
           "description": "Bs chuyên gia Nội Khoa (hô hấp, tim mạch, cấp cứu …) và Nhi Khoa từ bệnh viện Bạch Mai Hà Nội",
           "categoryId": ["bacsi"],
           "variantId": ["kham"]
-        }  
+        } , {
+            "id": 11,
+            "name": "KSK Lái Xe",
+            "image": "https://benhvienminhan.com/wp-content/uploads/2024/01/van-phong-quoc-te-1.jpg",
+            "price": 10000,
+            "sale": {
+              "type": "percent",
+              "percent": 0.5
+            },
+            "description": "Hồ sơ khám sức khỏe của người từ đủ 18 tuổi trở lên",
+            "categoryId": ["ksk"],
+            "variantId": ["kham"]
+          },  
+          {
+            "id": 12,
+            "name": "KSK Nước Ngoài",
+            "image": "https://benhvienminhan.com/wp-content/uploads/2024/01/van-phong-quoc-te-1.jpg",
+            "price": 10000,
+            "sale": {
+              "type": "percent",
+              "percent": 0.5
+            },
+            "description": "BV là đơn vị duy nhất tại khu vực Bắc miền trung được cấp giấy phép KSK đi Đài Loan. Ngoài ra, BV còn cấp GP KSKtại các nước Châu Âu (Rumani, Hungary, Ba Lan, Serbia,…), Nhật, Hàn, Singapore,…",
+            "categoryId": ["ksk"],
+            "variantId": ["kham"]
+          }   
       ]
     return res.status(200).json(data);    
 }
