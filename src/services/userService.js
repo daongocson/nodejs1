@@ -478,6 +478,22 @@ const laysoService = async (oaid,name,numberlayso,today) => {
 const postDataDkkbacsiService = async (dataTaxi) => {
     const {idoa,tenbn,phonenum,idbs,tenbs,namsinh,addbn}=dataTaxi;
     try {             
+        let sqlServer="insert into  [His_xml].[dbo].[tb_ksk](idoa,phonenum,tenbn ,idbs,tenbs,"
+         +"namsinh,addbn,ngaylog,trangthai) values('"+idoa+"','"+phonenum+"','"+tenbn+"','"+idbs+"',N'"+tenbs+"','"         
+         +namsinh+"',N'"+addbn+"',getdate(),1)";       
+        // console.log(sqlServer);
+        await sql.connect(sqlConfig);   
+        let result= await sql.query(sqlServer);      
+        return {message:"sucess",duyet:"Tạo dữ liệu bệnh nhân đăng ký thành công"};  
+        // }        
+    } catch (error) {
+        console.log("postFilldo",error);
+          return  {message:"fail",duyet:"Lỗi kết nối, quá tải hệ thống"};  
+    }
+}
+const postDkKskService = async (dataksk) => {
+    const {idoa,tenbn,phonenum,idbs,tenbs,namsinh,addbn}=dataTaxi;
+    try {             
         let sqlServer="insert into  [His_xml].[dbo].[tb_bschuyengia](idoa,phonenum,tenbn ,idbs,tenbs,"
          +"namsinh,addbn,ngaylog,trangthai) values('"+idoa+"','"+phonenum+"','"+tenbn+"','"+idbs+"',N'"+tenbs+"','"         
          +namsinh+"',N'"+addbn+"',getdate(),1)";       
@@ -1076,5 +1092,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    getDsDkkhamBsService,getDkKhamService,postDataDkkbacsiService,getDstaxiService,getTaxiChamcongService,postDataTaxiService,laysoService,getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    postDkKskService,getDsDkkhamBsService,getDkKhamService,postDataDkkbacsiService,getDstaxiService,getTaxiChamcongService,postDataTaxiService,laysoService,getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }

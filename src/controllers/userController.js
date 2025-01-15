@@ -109,6 +109,10 @@ const postDkkbacsi = async (req, res) => {
     const datares = await postDataDkkbacsiService(req.body);    
     return res.status(200).json(datares);
 }
+const postDkKsk = async (req, res) => {           
+    const datares = await postDataDkkbacsiService(req.body);    
+    return res.status(200).json(datares);
+}
 const postkqclsByid = async (req, res) => {   
     const {mavp} = req.body;      
     const data = await getKqclsByidService(mavp);
@@ -311,7 +315,7 @@ const getProducts= async (req, res)=>{
           "variantId": ["kham"]
         } , {
             "id": 11,
-            "name": "KSK Lái Xe",
+            "name": "Khám sức khỏe Lái Xe",
             "image": "https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/id-card-woman-color-icon.svg",
             "price": 10000,
             "sale": {
@@ -506,6 +510,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    getDsDkkhamBs,getDkKham,postDkkbacsi,getTaxiChamcong,postTaxiData,getDstaxi,getSott,getRates,postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    postDkKsk,getDsDkkhamBs,getDkKham,postDkkbacsi,getTaxiChamcong,postTaxiData,getDstaxi,getSott,getRates,postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }

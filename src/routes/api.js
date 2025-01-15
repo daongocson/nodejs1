@@ -1,6 +1,6 @@
 const express = require('express');
 const sql = require('mssql');
-const { guiChamcong,createUser, handleLogin, getUser,  getAccount,getLsError, getLsDoctors, getYlbacsi, getPatient, getLsPhongkham, getLskhambenh, getLsCskh, getLschamcong, getChamcongId, guiYeucau, getLsycsua, guiDuyetyeucau, deleteYeucau, postYcBydate, postFilldoctor, postcreatenickbs, postuserduyet, postmaquyen, fetchycbydate, postkqclsByid, postPayment, postPaymentNotice, postObtoMac, zaloUpdateOrderStatus, getNotification, getCategories, getProducts, postPatientByphone, postRatting, getRates, getSott, getDstaxi, postTaxiData, getTaxiChamcong, postDkkbacsi, getDkKham, getDsDkkhamBs } = require('../controllers/userController');
+const { guiChamcong,createUser, handleLogin, getUser,  getAccount,getLsError, getLsDoctors, getYlbacsi, getPatient, getLsPhongkham, getLskhambenh, getLsCskh, getLschamcong, getChamcongId, guiYeucau, getLsycsua, guiDuyetyeucau, deleteYeucau, postYcBydate, postFilldoctor, postcreatenickbs, postuserduyet, postmaquyen, fetchycbydate, postkqclsByid, postPayment, postPaymentNotice, postObtoMac, zaloUpdateOrderStatus, getNotification, getCategories, getProducts, postPatientByphone, postRatting, getRates, getSott, getDstaxi, postTaxiData, getTaxiChamcong, postDkkbacsi, getDkKham, getDsDkkhamBs, postDkKsk } = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delay = require('../middleware/delay');
 const routerAPI = express.Router();
@@ -68,6 +68,7 @@ routerAPI.post("/getsott", getSott);
 routerAPI.post("/getdkk", getDkKham);
 routerAPI.post("/posttaxidata", postTaxiData);
 routerAPI.post("/postdkkbacsi", postDkkbacsi);
+routerAPI.post("/postdkksk", postDkKsk);
 
 routerAPI.get("/getnotification", getNotification);
 routerAPI.get("/getdstaxi", getDstaxi);
