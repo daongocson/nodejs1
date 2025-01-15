@@ -213,7 +213,11 @@ const getCategories= async (req, res)=>{
                 "id": "bacsi",
                 "name": "Khám BS Hà Nội",
                 "icon": "https://uxwing.com/wp-content/themes/uxwing/download/education-school/scientist-icon.svg"            
-            }          
+            }, {
+                "id": "4",
+                "name": "Khám Sức Khỏe",
+                "icon": "https://uxwing.com/wp-content/themes/uxwing/download/education-school/scientist-icon.svg"            
+            }            
 
           
       ]
@@ -249,7 +253,7 @@ const getProducts= async (req, res)=>{
           "name": "Giáo Sư Bàng",
           "price": 10000,
           "image": "https://benhvienminhan.com/wp-content/uploads/2024/12/bsbang.jpg",
-          "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",
+          "description": "Bs chuyên gia Nội Khoa (hô hấp, tim mạch, cấp cứu …) và Nhi Khoa từ bệnh viện Bạch Mai Hà Nội",
           "categoryId": ["abc"],
           "variantId": ["kham"]
         },
@@ -258,7 +262,7 @@ const getProducts= async (req, res)=>{
           "name": "Bác Sĩ Khánh",
           "price": 10000,
           "image": "https://benhvienminhan.com/wp-content/uploads/2020/08/bs-Khanh.png",
-          "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",
+          "description": "Chuyên Khoa Chẩn Đoán Hình Ảnh bệnh viện Bạch Mai, Hà Nội khám, tầm soát các bệnh về: (Ung thư tuyến giáp, Tuyến Vú,  Hạch, Các bệnh lý về xương khớp…)",
           "categoryId": ["abc"],
           "variantId": ["size"]
         },
@@ -289,7 +293,7 @@ const getProducts= async (req, res)=>{
             "type": "percent",
             "percent": 0.5
           },
-          "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",
+          "description": "Chuyên Khoa Chẩn Đoán Hình Ảnh bệnh viện Bạch Mai, Hà Nội khám, tầm soát các bệnh về: (Ung thư tuyến giáp, Tuyến Vú,  Hạch, Các bệnh lý về xương khớp…)",
           "categoryId": ["bacsi"],
           "variantId": ["kham"]
         },
@@ -302,7 +306,7 @@ const getProducts= async (req, res)=>{
             "type": "percent",
             "percent": 0.5
           },
-          "description": "Tất cả các dịch vụ đều có phí đăng ký 10K, Không bao gồm giá dịch vụ",
+          "description": "Bs chuyên gia Nội Khoa (hô hấp, tim mạch, cấp cứu …) và Nhi Khoa từ bệnh viện Bạch Mai Hà Nội",
           "categoryId": ["bacsi"],
           "variantId": ["kham"]
         }  

@@ -479,8 +479,8 @@ const postDataDkkbacsiService = async (dataTaxi) => {
     const {idoa,tenbn,phonenum,idbs,tenbs,namsinh,addbn}=dataTaxi;
     try {             
         let sqlServer="insert into  [His_xml].[dbo].[tb_bschuyengia](idoa,phonenum,tenbn ,idbs,tenbs,"
-         +"namsinh,addbn,ngaylog) values('"+idoa+"','"+phonenum+"','"+tenbn+"','"+idbs+"',N'"+tenbs+"','"         
-         +namsinh+"',N'"+addbn+"',getdate())";       
+         +"namsinh,addbn,ngaylog,trangthai) values('"+idoa+"','"+phonenum+"','"+tenbn+"','"+idbs+"',N'"+tenbs+"','"         
+         +namsinh+"',N'"+addbn+"',getdate(),1)";       
         // console.log(sqlServer);
         await sql.connect(sqlConfig);   
         let result= await sql.query(sqlServer);      
@@ -812,7 +812,7 @@ const getDsDkkhamBsService = async function(){
     try {
         var datetime = new Date();   
         await sql.connect(sqlConfig);   ;
-        let strSql = "select TOP 30 * FROM [His_xml].[dbo].[tb_bschuyengia] order by ngaylog desc";        
+        let strSql = "select TOP 30 * FROM [His_xml].[dbo].[tb_bschuyengia] where trangthai=1 order by ngaylog desc";        
         let result= await sql.query(strSql);  
         return result.recordset;
     } catch (error) {
