@@ -312,7 +312,7 @@ const getProducts= async (req, res)=>{
         } , {
             "id": 11,
             "name": "KSK Lái Xe",
-            "image": "https://benhvienminhan.com/wp-content/uploads/2024/01/van-phong-quoc-te-1.jpg",
+            "image": "https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/id-card-woman-color-icon.svg",
             "price": 10000,
             "sale": {
               "type": "percent",
@@ -324,8 +324,8 @@ const getProducts= async (req, res)=>{
           },  
           {
             "id": 12,
-            "name": "KSK Nước Ngoài",
-            "image": "https://benhvienminhan.com/wp-content/uploads/2024/01/van-phong-quoc-te-1.jpg",
+            "name": "Khám sức khỏe",
+            "image": "https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/id-card-woman-color-icon.svg",
             "price": 10000,
             "sale": {
               "type": "percent",
