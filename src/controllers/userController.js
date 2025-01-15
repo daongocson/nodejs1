@@ -1,4 +1,4 @@
-const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService, getRatesService, laysoService, postDataTaxiService, getTaxiChamcongService, getDstaxiService, postDataDkkbacsiService, getDkKhamService, getDsDkkhamBsService, getDsKskService, getKskService } = require("../services/userService");
+const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService, getRatesService, laysoService, postDataTaxiService, getTaxiChamcongService, getDstaxiService, postDataDkkbacsiService, getDkKhamService, getDsDkkhamBsService, getDsKskService, getKskService, postKskService } = require("../services/userService");
 
 const crypto = require("crypto"); //  'crypto';
 const logAction = async (id_act,content) => {   
@@ -110,7 +110,7 @@ const postDkkbacsi = async (req, res) => {
     return res.status(200).json(datares);
 }
 const postDkKsk = async (req, res) => {           
-    const datares = await postDataDkkbacsiService(req.body);    
+    const datares = await postKskService(req.body);    
     return res.status(200).json(datares);
 }
 const postkqclsByid = async (req, res) => {   
