@@ -1,6 +1,6 @@
 const express = require('express');
 const sql = require('mssql');
-const { guiChamcong,createUser, handleLogin, getUser,  getAccount,getLsError, getLsDoctors, getYlbacsi, getPatient, getLsPhongkham, getLskhambenh, getLsCskh, getLschamcong, getChamcongId, guiYeucau, getLsycsua, guiDuyetyeucau, deleteYeucau, postYcBydate, postFilldoctor, postcreatenickbs, postuserduyet, postmaquyen, fetchycbydate, postkqclsByid, postPayment, postPaymentNotice, postObtoMac, zaloUpdateOrderStatus, getNotification, getCategories, getProducts, postPatientByphone, postRatting, getRates, getSott, getDstaxi, postTaxiData, getTaxiChamcong, postDkkbacsi, getDkKham, getDsDkkhamBs, postDkKsk } = require('../controllers/userController');
+const { guiChamcong,createUser, handleLogin, getUser,  getAccount,getLsError, getLsDoctors, getYlbacsi, getPatient, getLsPhongkham, getLskhambenh, getLsCskh, getLschamcong, getChamcongId, guiYeucau, getLsycsua, guiDuyetyeucau, deleteYeucau, postYcBydate, postFilldoctor, postcreatenickbs, postuserduyet, postmaquyen, fetchycbydate, postkqclsByid, postPayment, postPaymentNotice, postObtoMac, zaloUpdateOrderStatus, getNotification, getCategories, getProducts, postPatientByphone, postRatting, getRates, getSott, getDstaxi, postTaxiData, getTaxiChamcong, postDkkbacsi, getDkKham, getDsDkkhamBs, postDkKsk, getDsKsk } = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const delay = require('../middleware/delay');
 const routerAPI = express.Router();
@@ -66,6 +66,8 @@ routerAPI.post("/zaloUpdateOrderStatus", zaloUpdateOrderStatus);
 routerAPI.post("/postrating", postRatting);
 routerAPI.post("/getsott", getSott);
 routerAPI.post("/getdkk", getDkKham);
+routerAPI.post("/getksk", getDkKham);
+
 routerAPI.post("/posttaxidata", postTaxiData);
 routerAPI.post("/postdkkbacsi", postDkkbacsi);
 routerAPI.post("/postdkksk", postDkKsk);
@@ -77,6 +79,7 @@ routerAPI.get("/getdoctorrate", getCategories);
 routerAPI.get("/getbvrate", getRates);
 routerAPI.get("/gettaxichamcong", getTaxiChamcong);
 routerAPI.get("/getdsdkkhambs", getDsDkkhamBs);
+routerAPI.get("/getdsksk", getDsKsk);
 
 routerAPI.get("/getproducts", getProducts);
 routerAPI.get("/user", getUser);

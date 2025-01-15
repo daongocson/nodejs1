@@ -1,4 +1,4 @@
-const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService, getRatesService, laysoService, postDataTaxiService, getTaxiChamcongService, getDstaxiService, postDataDkkbacsiService, getDkKhamService, getDsDkkhamBsService } = require("../services/userService");
+const { postChamcongService,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService, getYlbacsiService, getPatientService, getLsPkService, getLsKhambenhService, getLsCskhService, getLsChamcongService, getLsChamcongIdService, postYeucauService, getLsycsuaService, saveAtion, guiDuyetyeucauService, deleteYeucauService, postYcBydateService, postFilldoctorService, postcreatenickbsService, postuserduyetService, postmaquyenService, fetchycbydateService, getKqclsByidService, getPatientByPhoneService, postRattingService, getRatesService, laysoService, postDataTaxiService, getTaxiChamcongService, getDstaxiService, postDataDkkbacsiService, getDkKhamService, getDsDkkhamBsService, getDsKskService, getKskService } = require("../services/userService");
 
 const crypto = require("crypto"); //  'crypto';
 const logAction = async (id_act,content) => {   
@@ -236,7 +236,11 @@ const getTaxiChamcong= async (req, res)=>{
     return res.status(200).json(data);    
 }
 const getDsDkkhamBs= async (req, res)=>{    
-    const data = await getDsDkkhamBsService();
+    const data = await getDsKskService();
+    return res.status(200).json(data);    
+}
+const getDsKsk= async (req, res)=>{    
+    const data = await getDsKskService();
     return res.status(200).json(data);    
 }
 const getSott= async (req, res)=>{ 
@@ -247,6 +251,11 @@ const getSott= async (req, res)=>{
 const getDkKham= async (req, res)=>{ 
     const {idoa,today}= req.body;         
     const data = await getDkKhamService(idoa,today);   
+    return res.status(200).json(data);        
+}
+const getKsk= async (req, res)=>{ 
+    const {idoa,today}= req.body;         
+    const data = await getKskService(idoa,today);   
     return res.status(200).json(data);        
 }
 const getProducts= async (req, res)=>{    
@@ -510,6 +519,6 @@ const getAccount = async (req, res) => {
 }
 
 module.exports = {
-    postDkKsk,getDsDkkhamBs,getDkKham,postDkkbacsi,getTaxiChamcong,postTaxiData,getDstaxi,getSott,getRates,postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
+    getKsk,getDsKsk,postDkKsk,getDsDkkhamBs,getDkKham,postDkkbacsi,getTaxiChamcong,postTaxiData,getDstaxi,getSott,getRates,postRatting,postPatientByphone,getProducts,getCategories,getNotification,zaloUpdateOrderStatus,postObtoMac,postPayment,postPaymentNotice,postkqclsByid,guiChamcong,fetchycbydate,postmaquyen,postuserduyet,postcreatenickbs,postFilldoctor,postYcBydate,deleteYeucau,guiDuyetyeucau,createUser, handleLogin, getUser, getAccount,getLsError,getLsDoctors,getYlbacsi,getPatient,getLsPhongkham,getLskhambenh,getLsCskh,getLschamcong,getChamcongId,guiYeucau,getLsycsua
 
 }

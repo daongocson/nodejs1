@@ -417,6 +417,21 @@ const getDkKhamService = async (idoa,today) => {
         return [];
     }
 }
+const getKskService = async (idoa,today) => {
+    if(idoa){
+        // check xem bảng lấy số chưa, nếu có rồi trả về stt
+        let sqlServer = "select * FROM [His_xml].[dbo].[tb_ksk] where ngaylog>CAST( GETDATE() AS Date) and idoa="+idoa+" order by ngaylog desc";          
+        await sql.connect(sqlConfig);           
+        let result= await sql.query(sqlServer);    
+        var rows = result.recordset;
+        if(rows.length>0){
+            return rows;
+        }
+    }  
+    else {
+        return [];
+    }
+}
 const laysoService = async (oaid,name,numberlayso,today) => {
     let tday = new Date();       
     let arrday = today.split('/');    
@@ -836,6 +851,18 @@ const getDsDkkhamBsService = async function(){
         return [];
     }
 }
+const getDsKskService = async function(){
+    try {
+        var datetime = new Date();   
+        await sql.connect(sqlConfig);   ;
+        let strSql = "select TOP 30 * FROM [His_xml].[dbo].[tb_ksk] where trangthai=1 order by ngaylog desc";        
+        let result= await sql.query(strSql);  
+        return result.recordset;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
 const getPatientService = async (mavp) => {
        if(Number.isNaN(mavp)){
             return;
@@ -1092,5 +1119,5 @@ const getLsDoctorService = async function(req,res){
     }
 }
 module.exports = {
-    postDkKskService,getDsDkkhamBsService,getDkKhamService,postDataDkkbacsiService,getDstaxiService,getTaxiChamcongService,postDataTaxiService,laysoService,getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
+    getKskService,getDsKskService,postDkKskService,getDsDkkhamBsService,getDkKhamService,postDataDkkbacsiService,getDstaxiService,getTaxiChamcongService,postDataTaxiService,laysoService,getRatesService,postRattingService,getPatientByPhoneService,getKqclsByidService,postChamcongService,fetchycbydateService,postmaquyenService,postuserduyetService,postcreatenickbsService,postFilldoctorService,postYcBydateService,deleteYeucauService,guiDuyetyeucauService,saveAtion,createUserService, loginService, getUserService,getLsErrorService,getLsDoctorService,getYlbacsiService,getPatientService,getLsPkService,getLsKhambenhService,getLsCskhService,getLsChamcongService,getLsChamcongIdService,postYeucauService,getLsycsuaService
 }
