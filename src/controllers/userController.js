@@ -236,7 +236,7 @@ const getTaxiChamcong= async (req, res)=>{
     return res.status(200).json(data);    
 }
 const getDsDkkhamBs= async (req, res)=>{    
-    const data = await getDsKskService();
+    const data = await getDsDkkhamBsService();
     return res.status(200).json(data);    
 }
 const getDsKsk= async (req, res)=>{    
